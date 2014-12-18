@@ -11,4 +11,8 @@ ${PROJECT_INCLUDE_DIR}/walala.h
 
 include_directories("${PROJECT_INCLUDE_DIR}")
 
-add_library(${PROJECT_NAME} ${PROJECT_SRCS})
+if(MSVC)
+    add_library(${PROJECT_NAME} STATIC ${PROJECT_SRCS})
+else()
+    add_library(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
+endif()
