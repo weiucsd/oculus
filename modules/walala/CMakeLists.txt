@@ -11,8 +11,12 @@ ${PROJECT_INCLUDE_DIR}/walala.h
 
 include_directories("${PROJECT_INCLUDE_DIR}")
 
+find_package( OpenCV REQUIRED )
+
 if(MSVC)
     add_library(${PROJECT_NAME} STATIC ${PROJECT_SRCS})
 else()
     add_library(${PROJECT_NAME} SHARED ${PROJECT_SRCS})
 endif()
+
+target_link_libraries (${PROJECT_NAME} ${OpenCV_LIBS})

@@ -11,6 +11,9 @@ ${PROJECT_SOURCE_DIR}/walalaExample.cpp
 include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories(../../modules/walala/inc/)
 
+find_package( OpenCV REQUIRED )
+
 add_executable(${PROJECT_NAME} ${PROJECT_SRCS})
 
+target_link_libraries (${PROJECT_NAME} ${OpenCV_LIBS})
 target_link_libraries (${PROJECT_NAME} walala)
