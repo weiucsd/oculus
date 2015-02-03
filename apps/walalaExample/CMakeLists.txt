@@ -16,6 +16,8 @@ include_directories(../../modules/walala/inc/)
 find_package( OpenCV REQUIRED )
 find_package( OculusSDK REQUIRED )
 
+include_directories(${OCULUS_SDK_INCLUDE_DIRS})
+
 add_executable(${PROJECT_NAME} ${PROJECT_SRCS})
 
 target_link_libraries (${PROJECT_NAME} ${OpenCV_LIBS})
