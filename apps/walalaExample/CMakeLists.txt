@@ -18,6 +18,8 @@ find_package( OvrvisionSDK REQUIRED )
 include_directories(${OCULUS_SDK_INCLUDE_DIRS})
 include_directories(${OVRVISION_SDK_INCLUDE_DIRS})
 
+include_directories(${OCULUS_SDK_INCLUDE_DIRS})
+
 add_executable(${PROJECT_NAME} ${PROJECT_SRCS})
 
 target_link_libraries (${PROJECT_NAME} ${OpenCV_LIBS})
