@@ -81,3 +81,11 @@ For Windows
 Download the latest Oculus PC SDK
 
 Set "OCULUS_SDK_ROOT_DIR" system variable into with "XXX/ovr_sdk_linux_x.x.x"
+
+OvrvisionSDK
+============
+For Windows
+
+Download the latest Oculus PC SDK
+
+Set "OVRVISION_SDK_ROOT_DIR" system variable into with "XXX/OvrVision/ovrvisionsdk_xxx"
