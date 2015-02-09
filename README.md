@@ -13,6 +13,8 @@ make
 
 ./walalaExample
 
+If the build directory exists already, you must clear the directory
+
 
 For WINDOWS
 
