@@ -19,6 +19,8 @@ elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Werror -fsigned-char -freg-struct-return -Wpointer-arith -Wcast-qual -Wshadow")
 endif()
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 set(CMAKE_BUILD_TYPE Release)
 
 add_subdirectory(modules)
