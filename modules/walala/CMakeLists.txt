@@ -7,6 +7,9 @@ set (PROJECT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 set(PROJECT_SRCS 
 ${PROJECT_SOURCE_DIR}/walala.cpp
 ${PROJECT_INCLUDE_DIR}/walala.h
+
+${PROJECT_SOURCE_DIR}/hands.cpp
+${PROJECT_INCLUDE_DIR}/hands.h
 )
 
 include_directories("${PROJECT_INCLUDE_DIR}")
