@@ -8,8 +8,6 @@ set(PROJECT_SRCS
 ${PROJECT_SOURCE_DIR}/walalaExample.cpp
 )
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-
 include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories(../../modules/walala/inc/)
 
