@@ -1,3 +1,12 @@
+RUNNING THE CODE
+==============
+./walalaExample.exe "path/to/Testing"
+
+example:
+
+./walalaExample.exe "D:\Documents\VirtualReality\Testing"
+
+
 VR-Hands-VPL
 ============
 
