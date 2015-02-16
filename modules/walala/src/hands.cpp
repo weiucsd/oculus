@@ -4,19 +4,19 @@
 #include <stdio.h>
 #include <math.h>
 
-Hands::Hands(const int frame, const int frame2, const int m, const bool d)
+HD::Hands::Hands(const int frame, const int frame2, const int m, const bool d)
 {
-	backgroundFrame = frame;
-	backgroundFrame2 = frame2;
-	nmixtures = m;
-	detectShadows = d;
-	iter = 0;
+	backgroundFrame_ = frame;
+	iter_ = 0;
+
+	pMOG1_ = cv::createBackgroundSubtractorMOG2();
+	pMOG2_ = cv::createBackgroundSubtractorMOG2();
 }
 
-Hands::~Hands()
+HD::Hands::~Hands()
 {}
 
-std::pair<cv::Point_<double>, double> Hands::circleFromPoints(const cv::Point p1, const cv::Point p2, const cv::Point p3)
+std::pair<cv::Point_<double>, double> HD::Hands::circleFromPoints(const cv::Point p1, const cv::Point p2, const cv::Point p3)
 {
 	double offset = pow(p2.x, 2) + pow(p2.y, 2);
 	double bc = (pow(p1.x, 2) + pow(p1.y, 2) - offset) / 2.0;
@@ -37,12 +37,12 @@ std::pair<cv::Point_<double>, double> Hands::circleFromPoints(const cv::Point p1
 	return std::make_pair(cv::Point_<double>(centerx, centery), radius);
 }
 
-double Hands::dist(const cv::Point x, const cv::Point y)
+double HD::Hands::dist(const cv::Point x, const cv::Point y)
 {
 	return (x.x - y.x)*(x.x - y.x) + (x.y - y.y)*(x.y - y.y);
 }
 
-void Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int eye)
+void HD::Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int eye)
 {
 	unsigned int i,j,ii;
 	cv::Mat frame;
@@ -58,25 +58,11 @@ void Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int eye)
 	//Update the current background model and get the foreground
 	if (eye == 1)
 	{
-		if (backgroundFrame > 0)
-		{
-			bg1.operator ()(frame, fore); backgroundFrame--;
-		}
-		else
-		{
-			bg1.operator()(frame, fore, 0);
-		}
+		pMOG1_->apply(frame, fore);
 	}
 	else
 	{
-		if (backgroundFrame2 > 0)
-		{
-			bg2.operator ()(frame, fore); backgroundFrame2--;
-		}
-		else
-		{
-			bg2.operator()(frame, fore, 0);
-		}
+		pMOG2_->apply(frame, fore);
 	}
 
 	//Enhance edges in the foreground by applying erosion and dilation
@@ -85,7 +71,7 @@ void Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int eye)
 
 
 	//Find the contours in the foreground
-	findContours(fore, contours, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+	findContours(fore, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 	for (i = 0; i < contours.size(); i++)
 		//Ignore all small insignificant areas
 		if (cv::contourArea(contours[i]) >= 5000)
