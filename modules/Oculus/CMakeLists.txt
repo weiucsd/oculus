@@ -6,8 +6,10 @@ set (PROJECT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 set(PROJECT_SRCS 
 ${PROJECT_SOURCE_DIR}/OculusBase.cpp
+${PROJECT_SOURCE_DIR}/OculusScene.cpp
 ${PROJECT_SOURCE_DIR}/OculusSampleScene.cpp
 ${PROJECT_INCLUDE_DIR}/OculusBase.h
+${PROJECT_INCLUDE_DIR}/OculusScene.h
 ${PROJECT_INCLUDE_DIR}/OculusSampleScene.h
 )
 

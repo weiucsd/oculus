@@ -1,5 +1,4 @@
 #include "OculusBase.h"
-#include "OculusSampleScene.h"
 
 namespace VPL {
 
@@ -293,7 +292,7 @@ void OculusBase::InitGL()
   }
 }
 
-void OculusBase::Run()
+void OculusBase::Run(OculusScene &oculusscene)
 {
 	InitOculus();
 	InitGLFW();
@@ -313,7 +312,6 @@ void OculusBase::Run()
   ovrHmd_RecenterPose(hmd_);
 
   // Initialize the scene
-  OculusSampleScene oculusscene;
   oculusscene.InitScene(camera_position_.x, camera_position_.y, camera_position_.z);
 
   // Main loop
