@@ -1,4 +1,4 @@
-#RUNNING THE CODE
+RUNNING THE CODE
 ==============
 ./walalaExample.exe "path/to/Testing"
 
@@ -7,7 +7,7 @@ example:
 ./walalaExample.exe "D:\Documents\VirtualReality\Testing"
 
 
-#VR-Hands-VPL
+VR-Hands-VPL
 ============
 
 For LINUX
@@ -39,10 +39,10 @@ compile (F7) on visual studio
 
 run (ctrl + F5) on visual studio
 
-#External libraries
+External libraries
 ============
 
-#OpenCV 
+OpenCV 
 ============
 
 For Linux 
@@ -70,7 +70,7 @@ Set "OpenCV_DIR" system variable into with "XXX/opencv/build"
 
 Set system variable at control panel->systems->advanced system settings->environment variables->system variables
 
-#OculusSDK
+OculusSDK
 ============
 
 For Linux
@@ -93,7 +93,7 @@ Download the latest Oculus PC SDK
 
 Set "OCULUS_SDK_ROOT_DIR" system variable into "XXX/OculusSDK"
 
-# GLEW
+ GLEW
 ============
 
 For Linux
@@ -108,7 +108,7 @@ Set "GLEW_LOCATION" system variable into "XXX/glew-1.XX.X"
 
 Add "XXX/glew-1.XX.X/bin/Release/win32" into "PATH" system variable
 
-# GLFW 
+ GLFW 
 ============
 
 For Linux
@@ -134,7 +134,7 @@ Download the latest pre-compiled binary for glfw
 Set "GLFW_LOCATION" system variable into with "XXX/glfw-3.X"
 
 
-#OvrvisionSDK
+OvrvisionSDK
 ============
 For Windows
 
