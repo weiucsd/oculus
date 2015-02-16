@@ -16,6 +16,8 @@ include_directories("${PROJECT_INCLUDE_DIR}")
 
 find_package( OpenCV REQUIRED )
 
+include_directories("${OpenCV_INCLUDE_DIRS}")
+
 if(MSVC)
     add_library(${PROJECT_NAME} STATIC ${PROJECT_SRCS})
 else()
