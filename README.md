@@ -72,7 +72,8 @@ Set system variable at control panel->systems->advanced system settings->environ
 
 OculusSDK
 ============
-For Linux 
+
+For Linux
 
 Download the latest Oculus PC SDK
 
@@ -82,16 +83,56 @@ sh ConfigureDebian.sh
 
 make run
 
-gedit ~/.bashrc 
+gedit ~/.bashrc
 
 add "export OCULUS_SDK_ROOT_DIR=/home/jason/ovr_sdk_linux_x.x.x" at the very end
-
 
 For Windows
 
 Download the latest Oculus PC SDK
 
-Set "OCULUS_SDK_ROOT_DIR" system variable into with "XXX/ovr_sdk_linux_x.x.x"
+Set "OCULUS_SDK_ROOT_DIR" system variable into "XXX/OculusSDK"
+
+ GLEW
+============
+
+For Linux
+
+sudo apt-get install libglew-dev
+
+For Windows
+
+Download the latest pre-compiled binary for glew
+
+Set "GLEW_LOCATION" system variable into "XXX/glew-1.XX.X"
+
+Add "XXX/glew-1.XX.X/bin/Release/win32" into "PATH" system variable
+
+ GLFW 
+============
+
+For Linux
+
+sudo apt-get install xorg-dev pkg-config
+
+Download the latest GLFW source
+
+unzip it
+
+mkdir build
+
+cmake ..
+
+make
+
+sudo make install
+
+For Windows
+
+Download the latest pre-compiled binary for glfw
+
+Set "GLFW_LOCATION" system variable into with "XXX/glfw-3.X"
+
 
 OvrvisionSDK
 ============
