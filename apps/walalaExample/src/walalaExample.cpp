@@ -12,9 +12,9 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	ovrHmd hmd;
-	OVR::Ovrvision* g_povrvision;
-	g_povrvision = new OVR::Ovrvision();
+	//ovrHmd hmd;
+	//OVR::Ovrvision* g_povrvision;
+	//g_povrvision = new OVR::Ovrvision();
 	HD::Hands hands;
 
 	cv::Mat mat;
