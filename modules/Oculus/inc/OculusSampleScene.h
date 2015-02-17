@@ -5,9 +5,11 @@
 
 #include <iostream>
 
+#include "OculusScene.h"
+
 namespace VPL {
 
-class OculusSampleScene
+class OculusSampleScene: public OculusScene
 { 
   public:  
     OculusSampleScene();  

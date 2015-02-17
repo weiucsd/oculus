@@ -23,6 +23,8 @@
 
 #include <iostream>
 
+#include "OculusScene.h"
+
 namespace VPL {
 
 class OculusBase
@@ -31,7 +33,7 @@ class OculusBase
     OculusBase();  
     ~OculusBase();
 
-    void Run();
+    void Run(OculusScene &oculusscene);
 
     void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     void WindowSizeCallback(GLFWwindow* window, int width, int height);
