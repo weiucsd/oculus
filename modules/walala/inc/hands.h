@@ -16,16 +16,16 @@ namespace HD {
 	{
 
 	public:
-		Hands(const int frame, const int frame2, const int m, const bool d);
+		Hands();
 		~Hands();
 
 		void DetectHands(const cv::Mat& matIn, cv::Mat& matOut, const int eye);
 	private:
-		cv::Ptr<cv::BackgroundSubtractor> pMOG1_;
-		cv::Ptr<cv::BackgroundSubtractor> pMOG2_;
+		cv::Ptr<cv::BackgroundSubtractor> pmog1_;
+		cv::Ptr<cv::BackgroundSubtractor> pmog2_;
 
-		std::pair<cv::Point_<double>, double> circleFromPoints(const cv::Point p1, const cv::Point p2, const cv::Point p3);
-		double dist(const cv::Point x, const cv::Point y);
+		std::pair<cv::Point_<double>, double> CircleFromPoints(const cv::Point p1, const cv::Point p2, const cv::Point p3);
+		double Dist(const cv::Point x, const cv::Point y);
 	};
 }
 #endif

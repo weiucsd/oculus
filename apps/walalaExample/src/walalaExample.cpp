@@ -12,17 +12,16 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	ovrHmd           HMD;
-	OVR::Ovrvision* g_pOvrvision;
-	g_pOvrvision = new OVR::Ovrvision();
-	
-	Hands hands(500,500,10,false);
+	ovrHmd hmd;
+	OVR::Ovrvision* g_povrvision;
+	g_povrvision = new OVR::Ovrvision();
+	HD::Hands hands;
 
 	cv::Mat mat;
 	cv::Mat mat2;
 
-	cv::Mat matHands;
-	cv::Mat matHands2;
+	cv::Mat mat_hands;
+	cv::Mat mat_hands2;
 
 	cv::namedWindow("left", 1);
 	cv::namedWindow("right", 1);
@@ -41,11 +40,11 @@ int main(int argc, char *argv[])
 		strcat_s(filename, extension);
 		mat2 = cv::imread(filename);
 		
-		hands.DetectHands(mat, matHands, 1);
-		hands.DetectHands(mat2, matHands2, 2);
+		hands.DetectHands(mat, mat_hands, 1);
+		hands.DetectHands(mat2, mat_hands2, 2);
 
-		imshow("left", matHands);
-		imshow("right", matHands2);
+		imshow("left", mat_hands);
+		imshow("right", mat_hands2);
 		cv::waitKey(1);
 	}
 

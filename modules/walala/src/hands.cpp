@@ -4,19 +4,16 @@
 #include <stdio.h>
 #include <math.h>
 
-HD::Hands::Hands(const int frame, const int frame2, const int m, const bool d)
+HD::Hands::Hands()
 {
-	backgroundFrame_ = frame;
-	iter_ = 0;
-
-	pMOG1_ = cv::createBackgroundSubtractorMOG2();
-	pMOG2_ = cv::createBackgroundSubtractorMOG2();
+	pmog1_ = cv::createBackgroundSubtractorMOG2();
+	pmog2_ = cv::createBackgroundSubtractorMOG2();
 }
 
 HD::Hands::~Hands()
 {}
 
-std::pair<cv::Point_<double>, double> HD::Hands::circleFromPoints(const cv::Point p1, const cv::Point p2, const cv::Point p3)
+std::pair<cv::Point_<double>, double> HD::Hands::CircleFromPoints(const cv::Point p1, const cv::Point p2, const cv::Point p3)
 {
 	double offset = pow(p2.x, 2) + pow(p2.y, 2);
 	double bc = (pow(p1.x, 2) + pow(p1.y, 2) - offset) / 2.0;
@@ -37,7 +34,7 @@ std::pair<cv::Point_<double>, double> HD::Hands::circleFromPoints(const cv::Poin
 	return std::make_pair(cv::Point_<double>(centerx, centery), radius);
 }
 
-double HD::Hands::dist(const cv::Point x, const cv::Point y)
+double HD::Hands::Dist(const cv::Point x, const cv::Point y)
 {
 	return (x.x - y.x)*(x.x - y.x) + (x.y - y.y)*(x.y - y.y);
 }
@@ -58,11 +55,11 @@ void HD::Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int ey
 	//Update the current background model and get the foreground
 	if (eye == 1)
 	{
-		pMOG1_->apply(frame, fore);
+		pmog1_->apply(frame, fore);
 	}
 	else
 	{
-		pMOG2_->apply(frame, fore);
+		pmog2_->apply(frame, fore);
 	}
 
 	//Enhance edges in the foreground by applying erosion and dilation
@@ -122,7 +119,7 @@ void HD::Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int ey
 					cv::Point closest_pt = palm_points[0];
 					std::vector<std::pair<double, int> > distvec;
 					for (ii = 0; ii < palm_points.size(); ii++)
-						distvec.push_back(std::make_pair(dist(rough_palm_center, palm_points[ii]), ii));
+						distvec.push_back(std::make_pair(Dist(rough_palm_center, palm_points[ii]), ii));
 					sort(distvec.begin(), distvec.end());
 
 					//Keep choosing 3 points till you find a circle with a valid radius
@@ -133,7 +130,7 @@ void HD::Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int ey
 						cv::Point p1 = palm_points[distvec[ii + 0].second];
 						cv::Point p2 = palm_points[distvec[ii + 1].second];
 						cv::Point p3 = palm_points[distvec[ii + 2].second];
-						soln_circle = circleFromPoints(p1, p2, p3);//Final palm center,radius
+						soln_circle = CircleFromPoints(p1, p2, p3);//Final palm center,radius
 						if (soln_circle.second != 0)
 							break;
 					}
@@ -167,11 +164,11 @@ void HD::Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int ey
 						int endidx = defects[j][1]; cv::Point ptEnd(tcontours[0][endidx]);
 						int faridx = defects[j][2]; cv::Point ptFar(tcontours[0][faridx]);
 						//X o--------------------------o Y
-						double Xdist = sqrt(dist(palm_center, ptFar));
-						double Ydist = sqrt(dist(palm_center, ptStart));
-						double length = sqrt(dist(ptFar, ptStart));
+						double Xdist = sqrt(Dist(palm_center, ptFar));
+						double Ydist = sqrt(Dist(palm_center, ptStart));
+						double length = sqrt(Dist(ptFar, ptStart));
 
-						double retLength = sqrt(dist(ptEnd, ptFar));
+						double retLength = sqrt(Dist(ptEnd, ptFar));
 						//Play with these thresholds to improve performance
 						if (length <= 3 * radius&&Ydist >= 0.4*radius&&length >= 10 && retLength >= 10 && std::max(length, retLength) / std::min(length, retLength) >= 0.8)
 							if (std::min(Xdist, Ydist) / std::max(Xdist, Ydist) <= 0.8)
