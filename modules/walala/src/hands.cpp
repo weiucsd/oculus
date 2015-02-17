@@ -116,7 +116,7 @@ void HD::Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int ey
 					//Then U chose the closest 3 points ang get the circle radius and center formed from them which is the palm center.
 					rough_palm_center.x /= defects.size() * 3;
 					rough_palm_center.y /= defects.size() * 3;
-					cv::Point closest_pt = palm_points[0];
+					//cv::Point closest_pt = palm_points[0];
 					std::vector<std::pair<double, int> > distvec;
 					for (ii = 0; ii < palm_points.size(); ii++)
 						distvec.push_back(std::make_pair(Dist(rough_palm_center, palm_points[ii]), ii));
