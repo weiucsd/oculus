@@ -7,5 +7,12 @@ int main()
 
   VPL::OculusSampleScene oculusscene;
 
-  oculusbase.Run(oculusscene);
+  oculusbase.InitRendering(oculusscene);
+  
+  for (int ii = 0; true; ii++)
+  {
+	  oculusbase.RenderFrame(oculusscene);
+  }
+  
+  oculusbase.RenderTerminate();
 }

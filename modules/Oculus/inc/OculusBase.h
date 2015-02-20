@@ -33,11 +33,14 @@ class OculusBase
     OculusBase();  
     ~OculusBase();
 
-    void Run(OculusScene &oculusscene);
-
     void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     void WindowSizeCallback(GLFWwindow* window, int width, int height);
 
+	void InitRendering(OculusScene &oculusscene);
+	void RenderFrame(OculusScene &oculusscene);
+	void RenderTerminate();
+
+	void Run(OculusScene &oculusscene);
   private:
     void InitOculus();
     void InitGLFW();
@@ -49,6 +52,12 @@ class OculusBase
     ovrEyeRenderDesc eye_render_desc_[2];
     ovrTexture eye_textures_[2];
     ovrVector3f camera_position_;
+
+	//Rendering variables
+	OVR::Matrix4f projection_matrici_[2];
+	ovrVector3f eye_offsets_[2];
+	unsigned int frame_index_;
+	ovrPosef eye_poses_[2];
 
     // glfw variable
     GLFWwindow* glfw_window_;

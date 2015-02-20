@@ -11,7 +11,7 @@
 #include <iostream>
 #include <sstream>
 
-namespace HD {
+namespace VPL {
 	class Hands
 	{
 
@@ -20,6 +20,8 @@ namespace HD {
 		~Hands();
 
 		void DetectHands(const cv::Mat& matIn, cv::Mat& matOut, const int eye);
+
+		cv::Point rough_palm_center;
 	private:
 		cv::Ptr<cv::BackgroundSubtractor> pmog1_;
 		cv::Ptr<cv::BackgroundSubtractor> pmog2_;

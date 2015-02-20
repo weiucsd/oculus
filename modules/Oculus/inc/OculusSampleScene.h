@@ -17,6 +17,8 @@ class OculusSampleScene: public OculusScene
 
     void InitScene(float &cam_x,float &cam_y,float &cam_z);
     void DrawScene();
+	double x = 0;
+	double y = 0;
 
   private:
     void SetStaticLightPositions();

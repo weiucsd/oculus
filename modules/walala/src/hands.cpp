@@ -4,20 +4,20 @@
 #include <stdio.h>
 #include <math.h>
 
-HD::Hands::Hands()
+VPL::Hands::Hands()
 {
 	pmog1_ = cv::createBackgroundSubtractorMOG2();
 	pmog2_ = cv::createBackgroundSubtractorMOG2();
 }
 
-HD::Hands::~Hands()
+VPL::Hands::~Hands()
 {}
 
-std::pair<cv::Point_<double>, double> HD::Hands::CircleFromPoints(const cv::Point p1, const cv::Point p2, const cv::Point p3)
+std::pair<cv::Point_<double>, double> VPL::Hands::CircleFromPoints(const cv::Point p1, const cv::Point p2, const cv::Point p3)
 {
-	double offset = pow(p2.x, 2) + pow(p2.y, 2);
-	double bc = (pow(p1.x, 2) + pow(p1.y, 2) - offset) / 2.0;
-	double cd = (offset - pow(p3.x, 2) - pow(p3.y, 2)) / 2.0;
+	double offset = std::pow(p2.x, 2) + std::pow(p2.y, 2);
+	double bc = (std::pow(p1.x, 2) + std::pow(p1.y, 2) - offset) / 2.0;
+	double cd = (offset - std::pow(p3.x, 2) - std::pow(p3.y, 2)) / 2.0;
 	double det = (p1.x - p2.x) * (p2.y - p3.y) - (p2.x - p3.x)* (p1.y - p2.y);
 	double TOL = 0.0000001;
 	if (abs(det) < TOL) 
@@ -29,17 +29,17 @@ std::pair<cv::Point_<double>, double> HD::Hands::CircleFromPoints(const cv::Poin
 	double idet = 1 / det;
 	double centerx = (bc * (p2.y - p3.y) - cd * (p1.y - p2.y)) * idet;
 	double centery = (cd * (p1.x - p2.x) - bc * (p2.x - p3.x)) * idet;
-	double radius = sqrt(pow(p2.x - centerx, 2) + pow(p2.y - centery, 2));
+	double radius = std::sqrt(std::pow(p2.x - centerx, 2) + std::pow(p2.y - centery, 2));
 
 	return std::make_pair(cv::Point_<double>(centerx, centery), radius);
 }
 
-double HD::Hands::Dist(const cv::Point x, const cv::Point y)
+double VPL::Hands::Dist(const cv::Point x, const cv::Point y)
 {
 	return (x.x - y.x)*(x.x - y.x) + (x.y - y.y)*(x.y - y.y);
 }
 
-void HD::Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int eye)
+void VPL::Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int eye)
 {
 	unsigned int i,j,ii;
 	cv::Mat frame;
@@ -63,27 +63,28 @@ void HD::Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int ey
 	}
 
 	//Enhance edges in the foreground by applying erosion and dilation
-	cv::erode(fore, fore, cv::Mat());
-	cv::dilate(fore, fore, cv::Mat());
+	cv::erode(fore, fore, cv::Mat(),cv::Point(-1,-1),1);
+	cv::dilate(fore, fore, cv::Mat(), cv::Point(-1, -1), 1);
 
+	//cv::namedWindow("contours");
 
 	//Find the contours in the foreground
-	findContours(fore, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
+	cv::findContours(fore, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_NONE);
 	for (i = 0; i < contours.size(); i++)
 		//Ignore all small insignificant areas
-		if (cv::contourArea(contours[i]) >= 5000)
+		if (cv::contourArea(contours[i]) >= 5000 && cv::contourArea(contours[i]) < 10000)
 		{
 			//Draw contour
 			std::vector<std::vector<cv::Point> > tcontours;
 			tcontours.push_back(contours[i]);
-			drawContours(frame, tcontours, -1, cv::Scalar(0, 0, 255), 2);
+			//drawContours(frame, tcontours, -1, cv::Scalar(0, 0, 255), 2);
 
 			//Detect Hull in current contour
 			std::vector<std::vector<cv::Point> > hulls(1);
 			std::vector<std::vector<int> > hullsI(1);
 			cv::convexHull(cv::Mat(tcontours[0]), hulls[0], false);
 			cv::convexHull(cv::Mat(tcontours[0]), hullsI[0], false);
-			drawContours(frame, hulls, -1, cv::Scalar(0, 255, 0), 2);
+			//drawContours(frame, hulls, -1, cv::Scalar(0, 255, 0), 2);
 
 			//Find minimum area rectangle to enclose hand
 			cv::RotatedRect rect = cv::minAreaRect(cv::Mat(tcontours[0]));
@@ -93,9 +94,11 @@ void HD::Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int ey
 			if (hullsI[0].size() > 0)
 			{
 				cv::Point2f rect_points[4]; rect.points(rect_points);
-				for (j = 0; j < 4; j++)
-					line(frame, rect_points[j], rect_points[(j + 1) % 4], cv::Scalar(255, 0, 0), 1, 8);
-				cv::Point rough_palm_center;
+				//for (j = 0; j < 4; j++)
+					//line(frame, rect_points[j], rect_points[(j + 1) % 4], cv::Scalar(255, 0, 0), 1, 8);
+
+				//cv::imshow("contours", frame);
+				//cv::Point rough_palm_center;
 				convexityDefects(tcontours[0], hullsI[0], defects);
 				if (defects.size() >= 3)
 				{
@@ -120,7 +123,7 @@ void HD::Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int ey
 					std::vector<std::pair<double, int> > distvec;
 					for (ii = 0; ii < palm_points.size(); ii++)
 						distvec.push_back(std::make_pair(Dist(rough_palm_center, palm_points[ii]), ii));
-					sort(distvec.begin(), distvec.end());
+					std::sort(distvec.begin(), distvec.end());
 
 					//Keep choosing 3 points till you find a circle with a valid radius
 					//As there is a high chance that the closes points might be in a linear line or too close that it forms a very large circle
@@ -153,9 +156,10 @@ void HD::Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int ey
 
 					//Draw the palm center and the palm circle
 					//The size of the palm gives the depth of the hand
-					circle(frame, palm_center, (int) 5, cv::Scalar(144, 144, 255), (int) 3);
-					circle(frame, palm_center, (int) radius, cv::Scalar(144, 144, 255), (int) 2);
+					circle(frame, rough_palm_center, (int) 5, cv::Scalar(144, 144, 255), (int) 3);
+					circle(frame, rough_palm_center, (int) radius, cv::Scalar(144, 144, 255), (int) 2);
 
+					/*
 					//Detect fingers by finding points that form an almost isosceles triangle with certain thesholds
 					int no_of_fingers = 0;
 					for (j = 0; j < defects.size(); j++)
@@ -164,23 +168,24 @@ void HD::Hands::DetectHands(const cv::Mat& matIn, cv:: Mat& matOut, const int ey
 						int endidx = defects[j][1]; cv::Point ptEnd(tcontours[0][endidx]);
 						int faridx = defects[j][2]; cv::Point ptFar(tcontours[0][faridx]);
 						//X o--------------------------o Y
-						double Xdist = sqrt(Dist(palm_center, ptFar));
-						double Ydist = sqrt(Dist(palm_center, ptStart));
-						double length = sqrt(Dist(ptFar, ptStart));
+						double Xdist = std::sqrt(Dist(palm_center, ptFar));
+						double Ydist = std::sqrt(Dist(palm_center, ptStart));
+						double length = std::sqrt(Dist(ptFar, ptStart));
 
-						double retLength = sqrt(Dist(ptEnd, ptFar));
+						double retLength = std::sqrt(Dist(ptEnd, ptFar));
 						//Play with these thresholds to improve performance
 						if (length <= 3 * radius&&Ydist >= 0.4*radius&&length >= 10 && retLength >= 10 && std::max(length, retLength) / std::min(length, retLength) >= 0.8)
 							if (std::min(Xdist, Ydist) / std::max(Xdist, Ydist) <= 0.8)
 							{
-								if ((Xdist >= 0.1*radius&&Xdist <= 1.3*radius&&Xdist<Ydist) || (Ydist >= 0.1*radius&&Ydist <= 1.3*radius&&Xdist>Ydist))
-									line(frame, ptEnd, ptFar, cv::Scalar(0, 255, 0), 1), no_of_fingers++;
+								//if ((Xdist >= 0.1*radius&&Xdist <= 1.3*radius&&Xdist<Ydist) || (Ydist >= 0.1*radius&&Ydist <= 1.3*radius&&Xdist>Ydist))
+									//line(frame, ptEnd, ptFar, cv::Scalar(0, 255, 0), 1), no_of_fingers++;
 							}
 
 
 					}
+					*/
 				}
-
+			
 			}
 		}
 	frame.copyTo(matOut);

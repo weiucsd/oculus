@@ -3,3 +3,4 @@ project (apps)
 
 add_subdirectory(walalaExample)
 add_subdirectory(OculusMinimalExample)
+add_subdirectory(MovingCube)
