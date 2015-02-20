@@ -1,10 +1,10 @@
 RUNNING THE CODE
 ==============
-./walalaExample.exe "path/to/Testing"
+./MovingCube.exe "path/to/Testing"
 
 example:
 
-./walalaExample.exe "D:\Documents\VirtualReality\Testing"
+./MovingCube.exe "D:\Documents\VirtualReality\Testing"
 
 
 VR-Hands-VPL
