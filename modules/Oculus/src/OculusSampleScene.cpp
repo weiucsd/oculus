@@ -139,7 +139,7 @@ void OculusSampleScene::DrawScene()
 {
   SetStaticLightPositions();
 
-  glTranslatef((GLfloat)x, (GLfloat) y, 0);
+  glTranslatef((GLfloat)x_, (GLfloat) y_, 0);
 
   // turn the cube a little bit so we can feel depth
   glRotatef(30.0f, 1.0f, 0.0f, 0.0f);

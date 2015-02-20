@@ -45,8 +45,8 @@ int main(int argc, char *argv[])
 		imshow("right", mat_hands2);
 		cv::waitKey(10);
 
-		oculusscene.x = hands.rough_palm_center.x/200;
-		oculusscene.y = hands.rough_palm_center.y/200;
+		oculusscene.x_ = hands.rough_palm_center.x/200;
+		oculusscene.y_ = hands.rough_palm_center.y/200;
 
 		oculusbase.RenderFrame(oculusscene);
 		cv::waitKey(10);
