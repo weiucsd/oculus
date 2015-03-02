@@ -10,6 +10,7 @@ ${PROJECT_SOURCE_DIR}/walalaExample.cpp
 
 include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories(../../modules/walala/inc/)
+include_directories(../../modules/OvrModule/inc/)
 
 find_package( OpenCV REQUIRED )
 find_package( OculusSDK REQUIRED )
@@ -25,3 +26,4 @@ target_link_libraries (${PROJECT_NAME} ${OpenCV_LIBS})
 target_link_libraries (${PROJECT_NAME} ${OCULUS_SDK_LIBRARIES})
 target_link_libraries (${PROJECT_NAME} ${OVRVISION_SDK_LIBRARIES})
 target_link_libraries (${PROJECT_NAME} walala)
+target_link_libraries (${PROJECT_NAME} OvrModule)

@@ -1,10 +1,12 @@
 RUNNING THE CODE
 ==============
-./MovingCube.exe "path/to/Testing"
+./MovingCube.exe "path/to/Testing" flag
 
-example:
+flag can be either 0 (run the code with the database of recorded images) or 1 (run the code using the ovrvision).
 
-./MovingCube.exe "D:\Documents\VirtualReality\Testing"
+Example:
+
+./MovingCube.exe "D:\Documents\VirtualReality\Testing" 0
 
 
 VR-Hands-VPL

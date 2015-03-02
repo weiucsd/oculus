@@ -292,7 +292,7 @@ namespace VPL {
 		}
 	}
 
-	void OculusBase::InitRendering(OculusScene &oculusscene)
+	void OculusBase::InitRendering(OculusSampleScene &oculusscene)
 	{
 		InitOculus();
 		InitGLFW();
@@ -336,7 +336,7 @@ namespace VPL {
 		exit(EXIT_SUCCESS);
 	}
 
-	void OculusBase::RenderFrame(OculusScene &oculusscene)
+	void OculusBase::RenderFrame(OculusSampleScene &oculusscene)
 	{
 		// Begin the frame
 		ovrHmd_BeginFrame(hmd_, frame_index_);
@@ -372,12 +372,12 @@ namespace VPL {
 			glLoadIdentity();
 
 			// Multiply with orientation retrieved from sensor
-			OVR::Quatf oculus_orientation = OVR::Quatf(eye_poses_[eye_type].Orientation);
-			OVR::Matrix4f modelview_matrix = OVR::Matrix4f(oculus_orientation.Inverted());
-			glMultMatrixf(&(modelview_matrix.Transposed().M[0][0]));
+			//OVR::Quatf oculus_orientation = OVR::Quatf(eye_poses_[eye_type].Orientation);
+			//OVR::Matrix4f modelview_matrix = OVR::Matrix4f(oculus_orientation.Inverted());
+			//glMultMatrixf(&(modelview_matrix.Transposed().M[0][0]));
 
 			// Translation due to positional tracking (DK2) and IPD
-			glTranslatef(-eye_poses_[eye_type].Position.x, -eye_poses_[eye_type].Position.y, -eye_poses_[eye_type].Position.z);
+			//glTranslatef(-eye_poses_[eye_type].Position.x, -eye_poses_[eye_type].Position.y, -eye_poses_[eye_type].Position.z);
 
 			// Move the world forward a bit to show the scene in front of us
 			glTranslatef(camera_position_.x, camera_position_.y, camera_position_.z);
@@ -395,6 +395,16 @@ namespace VPL {
 		++frame_index_;
 
 		glfwPollEvents();
+	}
+
+	void OculusBase::UpdateScene(OculusSampleScene &oculusscene, Hands &hands)
+	{
+		ovrSizei oculus_size;
+
+		oculusscene.hand_position_ = hands.hand_position_;
+
+		oculusscene.hand_position_.x = oculusscene.hand_position_.x / 100;
+		oculusscene.hand_position_.y = oculusscene.hand_position_.y / 100;
 	}
 
 }  // namespace VPL

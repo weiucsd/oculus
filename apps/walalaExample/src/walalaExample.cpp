@@ -12,9 +12,6 @@ int main(int argc, char *argv[])
 		return -1;
 	}
 
-	//ovrHmd hmd;
-	//OVR::Ovrvision* g_povrvision;
-	//g_povrvision = new OVR::Ovrvision();
 	VPL::Hands hands;
 
 	cv::Mat mat;
@@ -26,6 +23,7 @@ int main(int argc, char *argv[])
 	cv::namedWindow("left", 1);
 	cv::namedWindow("right", 1);
 
+	/*
 	for (int ii = 0; ii < 125; ii++)
 	{
 		char filename[300];
@@ -42,6 +40,7 @@ int main(int argc, char *argv[])
 		imshow("right", mat_hands2);
 		cv::waitKey(10);
 	}
+	*/
 
 	return 0;
 }

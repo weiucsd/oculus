@@ -24,6 +24,8 @@
 #include <iostream>
 
 #include "OculusScene.h"
+#include "OculusSampleScene.h"
+#include "hands.h"
 
 namespace VPL {
 
@@ -36,11 +38,14 @@ class OculusBase
     void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     void WindowSizeCallback(GLFWwindow* window, int width, int height);
 
-	void InitRendering(OculusScene &oculusscene);
-	void RenderFrame(OculusScene &oculusscene);
+	void InitRendering(OculusSampleScene &oculusscene);
+	void RenderFrame(OculusSampleScene &oculusscene);
 	void RenderTerminate();
 
-	void Run(OculusScene &oculusscene);
+	void Run(OculusSampleScene &oculusscene);
+
+	void UpdateScene(OculusSampleScene &oculusscene, Hands &hands);
+
   private:
     void InitOculus();
     void InitGLFW();
@@ -51,7 +56,7 @@ class OculusBase
     ovrGLConfig cfg_;
     ovrEyeRenderDesc eye_render_desc_[2];
     ovrTexture eye_textures_[2];
-    ovrVector3f camera_position_;
+	ovrVector3f camera_position_;
 
 	//Rendering variables
 	OVR::Matrix4f projection_matrici_[2];

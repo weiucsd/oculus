@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "OculusScene.h"
+#include "opencv2/opencv.hpp"
 
 namespace VPL {
 
@@ -17,8 +18,7 @@ class OculusSampleScene: public OculusScene
 
     void InitScene(float &cam_x,float &cam_y,float &cam_z);
     void DrawScene();
-	double x_ = 0;
-	double y_ = 0;
+	cv::Point3d hand_position_;
 
   private:
     void SetStaticLightPositions();
