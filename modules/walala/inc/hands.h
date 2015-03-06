@@ -35,6 +35,10 @@ namespace VPL {
 		cv::Point rough_palm_center_left_;
 		cv::Point rough_palm_center_right_;
 
+		cv::KalmanFilter kalman_filter_;
+
+		void KalmanFilterHand();
+
 		float Depth(const cv::Point left, const cv::Point right, VPL::OvrVision& ovrcamera);
 		void DetectOneHand(const cv::Mat& matIn, cv::Mat& matOut, const int eye);
 		void DetectOneHandMine(const cv::Mat& matIn, cv::Mat& matOut, const int eye);

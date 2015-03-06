@@ -10,6 +10,21 @@ namespace VPL
 	{
 		pmog1_ = cv::createBackgroundSubtractorMOG2();
 		pmog2_ = cv::createBackgroundSubtractorMOG2();
+
+		kalman_filter_ = cv::KalmanFilter(6, 3, 0, CV_32F);
+		kalman_filter_.transitionMatrix = (cv::Mat_<float>(6, 6) << 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1);
+		//cv::setIdentity(kalman_filter_.transitionMatrix);
+
+		kalman_filter_.statePre.at<float>(0,0) = 0;
+		kalman_filter_.statePre.at<float>(1,0) = 0;
+		kalman_filter_.statePre.at<float>(2,0) = 0;
+		kalman_filter_.statePre.at<float>(3, 0) = 0;
+		kalman_filter_.statePre.at<float>(4, 0) = 0;
+		kalman_filter_.statePre.at<float>(5, 0) = 0;
+		cv::setIdentity(kalman_filter_.measurementMatrix);
+		cv::setIdentity(kalman_filter_.processNoiseCov, cv::Scalar::all(1e-1));
+		cv::setIdentity(kalman_filter_.measurementNoiseCov, cv::Scalar::all(10));
+		cv::setIdentity(kalman_filter_.errorCovPost, cv::Scalar::all(.1));
 	}
 
 	Hands::~Hands()
@@ -62,8 +77,24 @@ namespace VPL
 
 		depth = Depth(rough_palm_center_left_, rough_palm_center_right_, ovrcamera);
 		hand_position_.z = depth;
-		hand_position_.y = rough_palm_center_left_.y;
-		hand_position_.x = rough_palm_center_left_.x;
+		hand_position_.y = (rough_palm_center_left_.y-640/2)*depth/ovrcamera.GetFocalPoint();
+		hand_position_.x = (rough_palm_center_left_.x-480/2)*depth/ovrcamera.GetFocalPoint();
+
+		KalmanFilterHand();
+	}
+
+	void Hands::KalmanFilterHand()
+	{
+		cv::Mat prediction = kalman_filter_.predict();
+		cv::Mat measurement(3, 1, CV_32F);
+		measurement.at<float>(0,0) = hand_position_.x;
+		measurement.at<float>(1,0) = hand_position_.y;
+		measurement.at<float>(2,0) = hand_position_.z;
+
+		cv::Mat estimated = kalman_filter_.correct(measurement);
+		hand_position_.x = estimated.at<float>(0,0);
+		hand_position_.y = estimated.at<float>(1,0);
+		hand_position_.z = estimated.at<float>(2,0);
 	}
 
 	void Hands::DetectOneHand(const cv::Mat& matIn, cv::Mat& matOut, const int eye)

@@ -47,16 +47,16 @@ namespace VPL {
 				ovrHmd_RecenterPose(hmd_);
 				break;
 			case GLFW_KEY_UP:
-				camera_position_.z += 0.1f;
+				obj_position_.z += 0.1f;
 				break;
 			case GLFW_KEY_DOWN:
-				camera_position_.z -= 0.1f;
+				obj_position_.z -= 0.1f;
 				break;
 			case GLFW_KEY_LEFT:
-				camera_position_.x += 0.1f;
+				obj_position_.x += 0.1f;
 				break;
 			case GLFW_KEY_RIGHT:
-				camera_position_.x -= 0.1f;
+				obj_position_.x -= 0.1f;
 				break;
 			}
 
@@ -312,7 +312,7 @@ namespace VPL {
 		ovrHmd_RecenterPose(hmd_);
 
 		// Initialize the scene
-		oculusscene.InitScene(camera_position_.x, camera_position_.y, camera_position_.z);
+		oculusscene.InitScene(obj_position_.x, obj_position_.y, obj_position_.z);
 
 		// Main loop
 		frame_index_ = 0;
@@ -380,7 +380,7 @@ namespace VPL {
 			//glTranslatef(-eye_poses_[eye_type].Position.x, -eye_poses_[eye_type].Position.y, -eye_poses_[eye_type].Position.z);
 
 			// Move the world forward a bit to show the scene in front of us
-			glTranslatef(camera_position_.x, camera_position_.y, camera_position_.z);
+			glTranslatef(obj_position_.x, obj_position_.y, obj_position_.z);
 
 			// Draw Scene!
 			oculusscene.DrawScene();
@@ -403,8 +403,8 @@ namespace VPL {
 
 		oculusscene.hand_position_ = hands.hand_position_;
 
-		oculusscene.hand_position_.x = oculusscene.hand_position_.x / 100;
-		oculusscene.hand_position_.y = oculusscene.hand_position_.y / 100;
+		//oculusscene.hand_position_.x = oculusscene.hand_position_.x;
+		//oculusscene.hand_position_.y = oculusscene.hand_position_.y;
 	}
 
 }  // namespace VPL

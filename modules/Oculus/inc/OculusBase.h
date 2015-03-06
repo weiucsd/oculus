@@ -56,7 +56,7 @@ class OculusBase
     ovrGLConfig cfg_;
     ovrEyeRenderDesc eye_render_desc_[2];
     ovrTexture eye_textures_[2];
-	ovrVector3f camera_position_;
+	ovrVector3f obj_position_;
 
 	//Rendering variables
 	OVR::Matrix4f projection_matrici_[2];
