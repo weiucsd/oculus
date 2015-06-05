@@ -39,7 +39,7 @@ add_executable(${PROJECT_NAME} ${PROJECT_SRCS})
 
 target_link_libraries (${PROJECT_NAME} ${OpenCV_LIBS})
 target_link_libraries (${PROJECT_NAME} ${OCULUS_SDK_LIBRARIES})
-target_link_libraries (${PROJECT_NAME} ${OVRVISION_SDK_LIBRARIES})
+#target_link_libraries (${PROJECT_NAME} ${OVRVISION_SDK_LIBRARIES})
 target_link_libraries (${PROJECT_NAME} walala)
 target_link_libraries (${PROJECT_NAME} ${GLEW_LIBRARY})
 target_link_libraries (${PROJECT_NAME} ${GLFW_STATIC_LIBRARIES})

@@ -134,12 +134,3 @@ For Windows
 Download the latest pre-compiled binary for glfw
 
 Set "GLFW_LOCATION" system variable into with "XXX/glfw-3.X"
-
-
-OvrvisionSDK
-============
-For Windows
-
-Download the latest Oculus PC SDK
-
-Set "OVRVISION_SDK_ROOT_DIR" system variable into with "XXX/OvrVision/ovrvisionsdk_xxx"

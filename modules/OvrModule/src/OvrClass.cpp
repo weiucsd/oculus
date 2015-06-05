@@ -1,5 +1,5 @@
 #include "OvrClass.h"
-#include "ovrvision.h"
+//#include "ovrvision.h"
 
 namespace VPL {
 
@@ -15,22 +15,25 @@ namespace VPL {
 
 	void OvrVision::Initialize()
 	{
-		g_pOvrvision_ = new OVR::Ovrvision();
-		g_pOvrvision_->Open(0, OVR::OV_CAMVGA_FULL);	//Open
+		//g_pOvrvision_ = new OVR::Ovrvision();
+		//g_pOvrvision_->Open(0, OVR::OV_CAMVGA_FULL);	//Open
 	}
 
 	float OvrVision::GetFocalPoint()
 	{
-		return g_pOvrvision_->GetFocalPoint();
+		//return g_pOvrvision_->GetFocalPoint();
+		return float(-320);
 	}
 
 	float OvrVision::GetBaseline()
 	{
-		return g_pOvrvision_->GetOculusRightGap(2);
+		//return g_pOvrvision_->GetOculusRightGap(2);
+		return float(1.1584);
 	}
 
 	void OvrVision::GetFrame(cv::Mat& left, cv::Mat& right)
 	{
+		/*
 		int row, col, color;
 		int processer_quality = OVR::OV_PSQT_HIGH;
 
@@ -50,10 +53,11 @@ namespace VPL {
 				}
 			}
 		}
+		*/
 	}
 
 	void OvrVision::Terminate()
 	{
-		delete g_pOvrvision_;
+		//delete g_pOvrvision_;
 	}
 }  // namespace VPL

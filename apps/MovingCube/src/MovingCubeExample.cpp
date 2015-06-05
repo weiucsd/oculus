@@ -1,6 +1,6 @@
 #include <iostream>
 #include "walala.h"
-#include "OvrClass.h"
+//#include "OvrClass.h"
 #include "OVR.h"
 #include "hands.h"
 #include "OculusBase.h"
