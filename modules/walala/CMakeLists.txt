@@ -13,13 +13,13 @@ ${PROJECT_INCLUDE_DIR}/hands.h
 )
 
 include_directories("${PROJECT_INCLUDE_DIR}")
-include_directories(../OvrModule/inc/) 
+#include_directories(../OvrModule/inc/) 
 
 find_package( OpenCV REQUIRED )
 find_package( OvrvisionSDK REQUIRED )
 
 include_directories("${OpenCV_INCLUDE_DIRS}")
-include_directories(${OVRVISION_SDK_INCLUDE_DIRS})
+#include_directories(${OVRVISION_SDK_INCLUDE_DIRS})
 
 if(MSVC)
     add_library(${PROJECT_NAME} STATIC ${PROJECT_SRCS})
@@ -28,5 +28,5 @@ else()
 endif()
 
 target_link_libraries (${PROJECT_NAME} ${OpenCV_LIBS})
-target_link_libraries (${PROJECT_NAME} OvrModule)
-target_link_libraries (${PROJECT_NAME} ${OVRVISION_SDK_LIBRARIES})
+#target_link_libraries (${PROJECT_NAME} OvrModule)
+#target_link_libraries (${PROJECT_NAME} ${OVRVISION_SDK_LIBRARIES})

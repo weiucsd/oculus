@@ -5,7 +5,7 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/video/background_segm.hpp"
-#include "OvrClass.h"
+//#include "OvrClass.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
@@ -20,7 +20,7 @@ namespace VPL {
 		Hands();
 		~Hands();
 
-		void DetectHands(const cv::Mat& matInLeft, cv::Mat& matOutLeft, const cv::Mat& matInRight, cv::Mat& matOutRight, VPL::OvrVision& ovrcamera);
+		//void DetectHands(const cv::Mat& matInLeft, cv::Mat& matOutLeft, const cv::Mat& matInRight, cv::Mat& matOutRight, VPL::OvrVision& ovrcamera);
 
 		cv::Point3d hand_position_;
 
@@ -39,7 +39,7 @@ namespace VPL {
 
 		void KalmanFilterHand();
 
-		float Depth(const cv::Point left, const cv::Point right, VPL::OvrVision& ovrcamera);
+		//float Depth(const cv::Point left, const cv::Point right, VPL::OvrVision& ovrcamera);
 		void DetectOneHand(const cv::Mat& matIn, cv::Mat& matOut, const int eye);
 		void DetectOneHandMine(const cv::Mat& matIn, cv::Mat& matOut, const int eye);
 

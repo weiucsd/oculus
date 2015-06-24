@@ -58,6 +58,7 @@ namespace VPL
 		return (x.x - y.x)*(x.x - y.x) + (x.y - y.y)*(x.y - y.y);
 	}
 
+	/*
 	void Hands::DetectHands(const cv::Mat& matInLeft, cv::Mat& matOutLeft, const cv::Mat& matInRight, cv::Mat& matOutRight, VPL::OvrVision& ovrcamera)
 	{
 		float depth;
@@ -82,6 +83,7 @@ namespace VPL
 
 		KalmanFilterHand();
 	}
+	*/
 
 	void Hands::KalmanFilterHand()
 	{
@@ -242,6 +244,7 @@ namespace VPL
 		}
 	}
 
+	/*
 	float Hands::Depth(const cv::Point left, const cv::Point right,VPL::OvrVision& ovrcamera)
 	{
 
@@ -255,6 +258,7 @@ namespace VPL
 
 		return (baseline*focal_point) / (float)disparity.x;
 	}
+	*/
 
 	void Hands::DetectOneHandMine(const cv::Mat& matIn, cv::Mat& matOut, const int eye)
 	{

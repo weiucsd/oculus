@@ -23,8 +23,8 @@ int main(int argc, char *argv[])
 	VPL::OculusSampleScene oculusscene;
 	oculusbase.InitRendering(oculusscene);
 
-	VPL::OvrVision ovrcamera;
-	ovrcamera.Initialize();
+	//VPL::OvrVision ovrcamera;
+	//ovrcamera.Initialize();
 
 	VPL::Hands hands;
 
@@ -34,8 +34,8 @@ int main(int argc, char *argv[])
 	cv::Mat mat_hands;
 	cv::Mat mat_hands2;
 
-	VPL::OvrVision ovr;
-	ovr.Initialize();
+	//VPL::OvrVision ovr;
+	//ovr.Initialize();
 
 	cv::namedWindow("left hands");
 	cv::namedWindow("right hands");
@@ -50,12 +50,12 @@ int main(int argc, char *argv[])
 		while (1)
 		{
 			//Get frame from RGB cameras
-			ovrcamera.GetFrame(mat, mat2);
+			//ovrcamera.GetFrame(mat, mat2);
 			cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
 			cv::cvtColor(mat2, mat2, cv::COLOR_BGR2RGB);
 
 			//Run hand detection algorithm
-			hands.DetectHands(mat, mat_hands, mat2, mat_hands2, ovr);
+			//hands.DetectHands(mat, mat_hands, mat2, mat_hands2, ovr);
 
 			//Show location of hand in RGB
 			imshow("left hands", mat_hands);
@@ -80,11 +80,11 @@ int main(int argc, char *argv[])
 			mat2 = cv::imread(filename);
 
 			//Run hand detection algorithm
-			hands.DetectHands(mat, mat_hands, mat2, mat_hands2, ovr);
+			//hands.DetectHands(mat, mat_hands, mat2, mat_hands2, ovr);
 
 			//Show location of hand in RGB
-			imshow("left hands", mat_hands);
-			imshow("right hands", mat_hands2);
+			imshow("left hands", mat);
+			imshow("right hands", mat2);
 			cv::waitKey(10);
 
 			//Update location of cube using location of hand

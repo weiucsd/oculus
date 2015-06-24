@@ -3,4 +3,4 @@ project (modules)
 
 add_subdirectory(walala)
 add_subdirectory(Oculus)
-add_subdirectory(OvrModule)
+#add_subdirectory(OvrModule)
