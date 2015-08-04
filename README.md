@@ -7,7 +7,7 @@ To get this demo working, you need a Windows PC, since Oculus stop developing fo
 Next, you need to download Oculus SDK for Windows V0.6.0.1-beta and Oculus Runtime for Windows V0.6.0.1-beta from the link below.  
 https://developer.oculus.com/downloads/  
 Then, you need to install the runtime and set "OCULUS_SDK_ROOT_DIR" system variable into "xxx\OculusSDK_0.6.0.1".  
-Besides, you need to download and install PCSDK from the link below, and set "PCSDK_DIR" system variable into "C:\Program Files (x86)\Intel\PCSDK\".  
+Besides, you need to download and install PCSDK from the link below. After restarting, it will automatically set "PCSDK_DIR" system variable into "C:\Program Files (x86)\Intel\PCSDK\"(default).  
 https://software.intel.com/en-us/articles/intel-perceptual-computing-sdk-installer
 
 Now you can use cmake to build this demo.  
@@ -17,7 +17,7 @@ Currently, you need to make some changes in VS2013(we may fix it later):
   3. Set MovingCube as the Startup Project.
 The demo should be able to run now.
 
-About controlling in Oculus:
+About controlling in Oculus
 -------
   * WASD - Move in the room  
   * RTYFGH - Control the hand with 5 cylinders (right hand)  
