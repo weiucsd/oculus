@@ -28,3 +28,6 @@ V - Rotate the red cube to the left
 B - Push the button
 N - Pull the button
 M - You need to press M every time before pushing or pulling the button, or it will not work :->
+
+-----------------------------------Aug. 4th, 2015------------------------------------------------
+[Optimize] If the camera is not on, the program can still work.
