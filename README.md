@@ -17,7 +17,8 @@ Currently, you need to make some changes in VS2013(we may fix it later):
   3. Set MovingCube as the Startup Project.
 The demo should be able to run now.
 
-About controlling in Oculus:  
+About controlling in Oculus:
+-------
   * WASD - Move in the room  
   * RTYFGH - Control the hand with 5 cylinders (right hand)  
   * UIOJKL - Control the hand with 46 spheres (left hand)  
@@ -32,6 +33,6 @@ About controlling in Oculus:
   * M - You need to press M every time before pushing or pulling the button, or it will not work :->
 
 UPDATE
-=======
+-------
 ### Aug. 4th, 2015
 [Optimize] If the camera is not on, the program can still work.
