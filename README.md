@@ -18,9 +18,9 @@ Currently, you need to make some changes in VS2013(we may fix it later):
 The demo should be able to run now.
 
 About controlling in Oculus:  
-WASD - Move in the room  
-RTYFGH - Control the hand with 5 cylinders (right hand)  
-UIOJKL - Control the hand with 46 spheres (left hand)  
+  * WASD - Move in the room  
+  * RTYFGH - Control the hand with 5 cylinders (right hand)  
+  * UIOJKL - Control the hand with 46 spheres (left hand)  
   * P - Detach the left hand from the red cube
   * Q - reset the red cube's position
   * Z - Grab the red cube, press again to release
@@ -31,8 +31,7 @@ UIOJKL - Control the hand with 46 spheres (left hand)
   * N - Pull the button
   * M - You need to press M every time before pushing or pulling the button, or it will not work :->
 
-  
- UPDATE
- =======
+UPDATE
+=======
 ### Aug. 4th, 2015
 [Optimize] If the camera is not on, the program can still work.
