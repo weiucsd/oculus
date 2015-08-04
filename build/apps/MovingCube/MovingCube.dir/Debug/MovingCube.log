@@ -1,0 +1,29 @@
+﻿Build started 7/22/2015 3:34:46 PM.
+     1>Project "C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\build\apps\MovingCube\MovingCube.vcxproj" on node 2 (Build target(s)).
+     1>CustomBuild:
+         Building Custom Rule C:/Users/Igor/Documents/VirtualReality/VR-Hands-VPL-V2.2/apps/MovingCube/CMakeLists.txt
+         CMake does not need to re-run because C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\build\apps\MovingCube\CMakeFiles\generate.stamp is up-to-date.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IC:\Users\Igor\Documents\VirtualReality\OculusSDK_0.6.0.1\LibOVRKernel\Src /I"C:\Program Files (x86)\Intel\PCSDK\include" /I"C:\Program Files (x86)\Intel\PCSDK\sample\common\include" /IC:\Users\Igor\Documents\VirtualReality\OculusSDK_0.6.0.1\LibOVR\Include /I"C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\inc" /Zi /nologo /W4 /WX- /Od /Ob0 /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"MovingCube.dir\Debug\\" /Fd"MovingCube.dir\Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt "C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\src\main.cpp"
+         main.cpp
+     1>C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\inc\Win32_GLAppUtil.h(192): warning C4100: 'windowed' : unreferenced formal parameter
+     1>C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\inc\Win32_GLAppUtil.h(358): warning C4100: 'userParam' : unreferenced formal parameter
+     1>C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\inc\Win32_GLAppUtil.h(358): warning C4100: 'length' : unreferenced formal parameter
+     1>C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\inc\Win32_GLAppUtil.h(358): warning C4100: 'severity' : unreferenced formal parameter
+     1>C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\inc\Win32_GLAppUtil.h(358): warning C4100: 'id' : unreferenced formal parameter
+     1>C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\inc\Win32_GLAppUtil.h(358): warning C4100: 'type' : unreferenced formal parameter
+     1>C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\inc\Win32_GLAppUtil.h(358): warning C4100: 'source' : unreferenced formal parameter
+     1>C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\inc\Win32_GLAppUtil.h(542): warning C4244: 'initializing' : conversion from 'int' to 'uint16_t', possible loss of data
+     1>C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\inc\Win32_GLAppUtil.h(595): warning C4244: 'initializing' : conversion from 'int' to 'uint16_t', possible loss of data
+     1>C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\inc\Win32_GLAppUtil.h(616): warning C4189: 'ny' : local variable is initialized but not referenced
+     1>C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\inc\Win32_GLAppUtil.h(615): warning C4189: 'nx' : local variable is initialized but not referenced
+     1>C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\src\main.cpp(143): warning C4189: 'finger_size' : local variable is initialized but not referenced
+     1>C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\apps\MovingCube\src\main.cpp(141): warning C4189: 'finger_pos' : local variable is initialized but not referenced
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\build\apps\MovingCube\Debug\MovingCube.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib C:\Users\Igor\Documents\VirtualReality\OculusSDK_0.6.0.1\LibOVR\Lib\Windows\Win32\Debug\VS2013\LibOVR.lib C:\Users\Igor\Documents\VirtualReality\OculusSDK_0.6.0.1\LibOVRKernel\Lib\Windows\Win32\Debug\VS2013\LibOVRKernel.lib "C:\Program Files (x86)\Intel\PCSDK\lib\Win32\libpxc_d.lib" "C:\Program Files (x86)\Intel\PCSDK\sample\common\lib\Win32\v120\libpxcutils_d.lib" /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:/Users/Igor/Documents/VirtualReality/VR-Hands-VPL-V2.2/build/apps/MovingCube/Debug/MovingCube.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/Igor/Documents/VirtualReality/VR-Hands-VPL-V2.2/build/apps/MovingCube/Debug/MovingCube.lib" /MACHINE:X86 /SAFESEH  /machine:X86 /debug MovingCube.dir\Debug\main.obj
+         MovingCube.vcxproj -> C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\build\apps\MovingCube\Debug\MovingCube.exe
+     1>Done Building Project "C:\Users\Igor\Documents\VirtualReality\VR-Hands-VPL-V2.2\build\apps\MovingCube\MovingCube.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.25
