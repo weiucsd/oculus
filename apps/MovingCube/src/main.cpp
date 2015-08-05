@@ -65,16 +65,14 @@ static void DisplayPicture(PXCImage *depth, PXCGesture *gesture) {
 //-------------------------------------------------------------------------------------
 int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 {
+	////Detect whether the camera is on
+	bool camera_on = false;
 	////Loading camera
 	UtilPipeline pp;
-	//pp->QueryCapture()->SetFilter(PXCCapture::Device::PROPERTY_DEPTH_SMOOTHING, true);
-
-	//pxcCHAR * char_name = L"Hand/Finger Tracking and Gesture Recognition";
 	pp.EnableGesture(L"Hand/Finger Tracking and Gesture Recognition");
-
 	pp.EnableImage(PXCImage::COLOR_FORMAT_DEPTH);
-	pp.Init();
-
+	if (pp.Init())
+		camera_on = true;
 
     OVR::System::Init();
 
@@ -146,22 +144,26 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
     // Main loop
     while (Platform.HandleMessages())
     {
+// ADDING START	
 		std::vector<Vector3f> pos_six_point;
-		// Get the hand position
-		if (pp.AcquireFrame(true)) {
-			PXCGesture *gesture = pp.QueryGesture();
-			PXCImage *depth_image = pp.QueryImage(PXCImage::IMAGE_TYPE_DEPTH);
+		if (camera_on)
+		{
+			// Get the hand position
+			if (pp.AcquireFrame(true)) {
+				PXCGesture *gesture = pp.QueryGesture();
+				PXCImage *depth_image = pp.QueryImage(PXCImage::IMAGE_TYPE_DEPTH);
 
-			////DisplayPicture
-			DisplayPicture(depth_image, gesture);
+				////DisplayPicture
+				DisplayPicture(depth_image, gesture);
 
-			////DisplayGeoNode
-			pos_six_point = DisplayGeoNode(gesture);
+				////DisplayGeoNode
+				pos_six_point = DisplayGeoNode(gesture);
 
-			pp.ReleaseFrame();
-			//pp.Close();
-			//pp.Release();
+				pp.ReleaseFrame();
+			}
 		}
+// ADDING END
+
         // Keyboard inputs to adjust player orientation
         static float Yaw(3.141592f);  
         if (Platform.Key[VK_LEFT])  Yaw += 0.02f;
@@ -174,7 +176,6 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
         if (Platform.Key['D'])                          Pos2+=Matrix4f::RotationY(Yaw).Transform(Vector3f(+0.05f,0,0));
         if (Platform.Key['A'])                          Pos2+=Matrix4f::RotationY(Yaw).Transform(Vector3f(-0.05f,0,0));
 		Pos2.y = ovrHmd_GetFloat(HMD, OVR_KEY_EYE_HEIGHT, Pos2.y);
-
 
 // ADDING START		
 		//// If the hand is close to the cube, the cube moves with the hand.
@@ -273,22 +274,24 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 		if (Platform.Key['Q'])
 			roomScene.Models[1]->Pos = Vector3f(2.0f, 1.0f, 0.1f);
 
-
-		std::vector<Vector3f> aver_pos_six_point = pos_six_point;
-		//// Change the position of the hand according to the camera
-		roomScene.Models[53]->Pos = aver_pos_six_point[0] + Vector3f(0, -0.1f, 0);
-		for (int cylinder_num = 1; cylinder_num < 6; cylinder_num++)
-			if (aver_pos_six_point[cylinder_num].x != 0 || aver_pos_six_point[cylinder_num].y != 0 || aver_pos_six_point[cylinder_num].z != 0)
-			{
-				float Cylinder_length = aver_pos_six_point[0].Distance(aver_pos_six_point[cylinder_num]) + 0.01f;
-				roomScene.Models[47 + cylinder_num]->Pos = (aver_pos_six_point[0] + aver_pos_six_point[cylinder_num]) / 2;
-				roomScene.Models[47 + cylinder_num]->Rot = Quatf(roomScene.get_Normal(aver_pos_six_point[0], aver_pos_six_point[0] + Vector3f(0, 0, 1.0f), aver_pos_six_point[cylinder_num]), (aver_pos_six_point[cylinder_num] - aver_pos_six_point[0]).Angle(Vector3f(0, 0, Cylinder_length)));
-			}
-
-		//// If the player moves, his hand also moves.
-		for (int i = 48; i <= 53; i++)
+		if (camera_on)
 		{
-			roomScene.Models[i]->Pos = roomScene.Models[i]->Pos + Pos2 + Vector3f(0, 0, 3);
+			std::vector<Vector3f> aver_pos_six_point = pos_six_point;
+			//// Change the position of the hand according to the camera
+			roomScene.Models[53]->Pos = aver_pos_six_point[0] + Vector3f(0, -0.1f, 0);
+			for (int cylinder_num = 1; cylinder_num < 6; cylinder_num++)
+				if (aver_pos_six_point[cylinder_num].x != 0 || aver_pos_six_point[cylinder_num].y != 0 || aver_pos_six_point[cylinder_num].z != 0)
+				{
+					float Cylinder_length = aver_pos_six_point[0].Distance(aver_pos_six_point[cylinder_num]) + 0.01f;
+					roomScene.Models[47 + cylinder_num]->Pos = (aver_pos_six_point[0] + aver_pos_six_point[cylinder_num]) / 2;
+					roomScene.Models[47 + cylinder_num]->Rot = Quatf(roomScene.get_Normal(aver_pos_six_point[0], aver_pos_six_point[0] + Vector3f(0, 0, 1.0f), aver_pos_six_point[cylinder_num]), (aver_pos_six_point[cylinder_num] - aver_pos_six_point[0]).Angle(Vector3f(0, 0, Cylinder_length)));
+				}
+
+			//// If the player moves, his hand also moves.
+			for (int i = 48; i <= 53; i++)
+			{
+				roomScene.Models[i]->Pos = roomScene.Models[i]->Pos + Pos2 + Vector3f(0, 0, 3);
+			}
 		}
 // ADDING END
         

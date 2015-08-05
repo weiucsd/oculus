@@ -3,7 +3,7 @@ ABOUT THIS CODE
 This is a hand tracking demo in Oculus.  
 This version is based on OculusSDK_0.6.0.1\Samples\OculusRoomTiny\OculusRoomTiny (GL), and Intel\PCSDK\sample\gesture_viewer.
 
-To get this demo working, you need a Windows PC, since Oculus stop developing for Mac and Linux.  
+To get this demo working, you need a Windows PC, since Oculus stop developing for Mac and Linux. Besides, your computer may need a dedicated graphics card Nvidia GTX 600 series or AMD Radeon HD 7000 series (or better), otherwise OpenGL cannot work.  
 Next, you need to download Oculus SDK for Windows V0.6.0.1-beta and Oculus Runtime for Windows V0.6.0.1-beta from the link below.  
 https://developer.oculus.com/downloads/  
 Then, you need to install the runtime and set "OCULUS_SDK_ROOT_DIR" system variable into "xxx\OculusSDK_0.6.0.1".  
