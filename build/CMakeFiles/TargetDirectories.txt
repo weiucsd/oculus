@@ -1,3 +1,0 @@
-C:/Users/Igor/Documents/VirtualReality/VR-Hands-VPL-V2.2/build/apps/MovingCube/CMakeFiles/MovingCube.dir
-C:/Users/Igor/Documents/VirtualReality/VR-Hands-VPL-V2.2/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/Igor/Documents/VirtualReality/VR-Hands-VPL-V2.2/build/CMakeFiles/ZERO_CHECK.dir
