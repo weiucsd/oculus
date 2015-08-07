@@ -37,5 +37,7 @@ UPDATE
 ### Aug. 4th, 2015
 [Optimize] If the camera is not on, the program can still work.
 ### Aug. 5th, 2015
-[Optimize] Revamp the cmake file. Add all included files and libraries to github, so you do not need to download the SDK or set the system variable. But you still need to install the runtime.
+[Optimize] Revamp the cmake file. Add all included files and libraries to github, so you do not need to download the SDK or set the system variable. But you still need to install the runtime.  
 [Modify] Change all the runtime library to Multi-threaded Debug DLL(MDd).
+### Aug. 6th, 2015
+[Add] Add iPhone to the demo.

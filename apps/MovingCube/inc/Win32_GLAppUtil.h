@@ -312,8 +312,8 @@ struct OGL
         glGenFramebuffers(1, &fboId);
 
         glEnable(GL_DEPTH_TEST);
-        glFrontFace(GL_CW);
-        glEnable(GL_CULL_FACE);
+        //glFrontFace(GL_CW);
+        //glEnable(GL_CULL_FACE);
 
         if (UseDebugContext && GLE_ARB_debug_output)
         {
@@ -422,7 +422,7 @@ struct IndexBuffer
 };
 
 //---------------------------------------------------------------------------
-struct Model 
+struct OculusModel 
 {
     struct Color
     { 
@@ -449,8 +449,8 @@ struct Model
     VertexBuffer * vertexBuffer;
     IndexBuffer * indexBuffer;  
 
-    Model(Vector3f arg_pos, ShaderFill * arg_Fill ) { numVertices=0; numIndices=0; Pos = arg_pos; Fill = arg_Fill; }
-   ~Model()                                         { FreeBuffers(); }
+    OculusModel(Vector3f arg_pos, ShaderFill * arg_Fill ) { numVertices=0; numIndices=0; Pos = arg_pos; Fill = arg_Fill; }
+   ~OculusModel()                                         { FreeBuffers(); }
     Matrix4f& GetMatrix()                           { Mat = Matrix4f(Rot); Mat = Matrix4f::Translation(Pos) * Mat; return Mat;   }
     void AddVertex(const Vertex& v)                 { Vertices[numVertices++] = v;  }
     void AddIndex(uint16_t a)                       { Indices[numIndices++] = a;   }
@@ -669,9 +669,9 @@ struct Model
 struct Scene  
 {
     int     num_models;
-    Model * Models[20];
+    OculusModel * Models[20];
 
-    void    Add(Model * n)
+    void    Add(OculusModel * n)
     {   Models[num_models++] = n; }    
 
 	Vector3f get_Normal(Vector3f p1, Vector3f p2, Vector3f p3)
@@ -766,13 +766,13 @@ struct Scene
         glDeleteShader(fshader);
 
 //0		// Construct geometry
-		Model * m = new Model(Vector3f(0, 0, 0), grid_material[2]);  // Moving box
-		m->AddSolidColorBox(0, 0, 0, +1.0f, +1.0f, 1.0f, Model::Color(64, 64, 64));
+		OculusModel * m = new OculusModel(Vector3f(0, 0, 0), grid_material[2]);  // Moving box
+		m->AddSolidColorBox(0, 0, 0, +1.0f, +1.0f, 1.0f, OculusModel::Color(64, 64, 64));
 		m->AllocateBuffers(); Add(m);
 
 //1		//// test box
-		m = new Model(Vector3f(2.0f, 1.0f, 0.1f), grid_material[2]);  //// My box~
-		m->AddSolidColorBox(0.0, 0.0, 0.0, +1.0f, +1.0f, 1.0f, Model::Color(128, 0, 0));
+		m = new OculusModel(Vector3f(2.0f, 1.0f, 0.1f), grid_material[2]);  //// My box~
+		m->AddSolidColorBox(0.0, 0.0, 0.0, +1.0f, +1.0f, 1.0f, OculusModel::Color(128, 0, 0));
 		m->AllocateBuffers(); Add(m);
 
 //2-47	//// We will draw a hand in the following.
@@ -784,8 +784,8 @@ struct Scene
 		float thumb_size[6] = { 0.8f, 0.8f, 0.9f, 0.7f, 0.8f, 0.7f };
 		for (int sphere_num = 0; sphere_num < 6; sphere_num++)
 		{
-			m = new Model(hand_pos + thumb_pos[sphere_num], grid_material[3]);  //// My Sphere~
-			m->AddSphere(+0.1f*thumb_size[sphere_num], 10, Model::Color(150, 80, 150));
+			m = new OculusModel(hand_pos + thumb_pos[sphere_num], grid_material[3]);  //// My Sphere~
+			m->AddSphere(+0.1f*thumb_size[sphere_num], 10, OculusModel::Color(150, 80, 150));
 			m->AllocateBuffers(); Add(m);
 		}
 
@@ -795,8 +795,8 @@ struct Scene
 		float index_size[6] = { 0.8f, 0.8f, 0.9f, 0.7f, 0.8f, 0.7f };
 		for (int sphere_num = 0; sphere_num < 6; sphere_num++)
 		{
-			m = new Model(hand_pos + index_pos[sphere_num], grid_material[3]);  //// My Sphere~
-			m->AddSphere(+0.1f*index_size[sphere_num], 10, Model::Color(128, 0, 0));
+			m = new OculusModel(hand_pos + index_pos[sphere_num], grid_material[3]);  //// My Sphere~
+			m->AddSphere(+0.1f*index_size[sphere_num], 10, OculusModel::Color(128, 0, 0));
 			m->AllocateBuffers(); Add(m);
 		}
 
@@ -806,8 +806,8 @@ struct Scene
 		float middle_size[6] = { 0.8f, 0.8f, 0.9f, 0.7f, 0.8f, 0.7f };
 		for (int sphere_num = 0; sphere_num < 6; sphere_num++)
 		{
-			m = new Model(hand_pos + middle_pos[sphere_num], grid_material[3]);  //// My Sphere~
-			m->AddSphere(+0.1f*middle_size[sphere_num], 10, Model::Color(0, 128, 0));
+			m = new OculusModel(hand_pos + middle_pos[sphere_num], grid_material[3]);  //// My Sphere~
+			m->AddSphere(+0.1f*middle_size[sphere_num], 10, OculusModel::Color(0, 128, 0));
 			m->AllocateBuffers(); Add(m);
 		}
 
@@ -817,8 +817,8 @@ struct Scene
 		float ring_size[6] = { 0.8f, 0.8f, 0.9f, 0.7f, 0.8f, 0.7f };
 		for (int sphere_num = 0; sphere_num < 6; sphere_num++)
 		{
-			m = new Model(hand_pos + ring_pos[sphere_num], grid_material[3]);  //// My Sphere~
-			m->AddSphere(+0.1f*ring_size[sphere_num], 10, Model::Color(0, 0, 128));
+			m = new OculusModel(hand_pos + ring_pos[sphere_num], grid_material[3]);  //// My Sphere~
+			m->AddSphere(+0.1f*ring_size[sphere_num], 10, OculusModel::Color(0, 0, 128));
 			m->AllocateBuffers(); Add(m);
 		}
 
@@ -828,8 +828,8 @@ struct Scene
 		float little_size[6] = { 0.8f, 0.8f, 0.9f, 0.7f, 0.8f, 0.7f };
 		for (int sphere_num = 0; sphere_num < 6; sphere_num++)
 		{
-			m = new Model(hand_pos + little_pos[sphere_num], grid_material[3]);  //// My Sphere~
-			m->AddSphere(+0.1f*little_size[sphere_num], 10, Model::Color(128, 128, 0));
+			m = new OculusModel(hand_pos + little_pos[sphere_num], grid_material[3]);  //// My Sphere~
+			m->AddSphere(+0.1f*little_size[sphere_num], 10, OculusModel::Color(128, 128, 0));
 			m->AllocateBuffers(); Add(m);
 		}
 
@@ -844,16 +844,16 @@ struct Scene
 			1.2f, 1.1f, 1.0f, 1.0f, 1.0f, 0.8f, 0.8f, 0.7f };
 		for (int sphere_num = 0; sphere_num < 16; sphere_num++)
 		{
-			m = new Model(hand_pos + palm_pos[sphere_num], grid_material[3]);  //// My Sphere~
-			m->AddSphere(+0.1f*palm_size[sphere_num], 10, Model::Color(20, 20, 20));
+			m = new OculusModel(hand_pos + palm_pos[sphere_num], grid_material[3]);  //// My Sphere~
+			m->AddSphere(+0.1f*palm_size[sphere_num], 10, OculusModel::Color(20, 20, 20));
 			m->AllocateBuffers(); Add(m);
 		}
 
 		//Vector3f Cylinder_bottom = Vector3f(-3, 0, 0);
 		//Vector3f Cylinder_top = Vector3f(-3, 1.5f, 1.1f);
 		//float Cylinder_length = Cylinder_top.Distance(Cylinder_bottom);
-		//m = new Model((Cylinder_bottom + Cylinder_top) / 2, grid_material[3]);  //// My Cylinder~
-		//m->AddCylinder(Cylinder_length, 0.1f, 10, Model::Color(147, 74, 0));
+		//m = new OculusModel((Cylinder_bottom + Cylinder_top) / 2, grid_material[3]);  //// My Cylinder~
+		//m->AddCylinder(Cylinder_length, 0.1f, 10, OculusModel::Color(147, 74, 0));
 		//m->Rot = Quatf(get_Normal(Cylinder_bottom, Cylinder_bottom + Vector3f(0, 0, 1.0f), Cylinder_top), (Cylinder_top - Cylinder_bottom).Angle(Vector3f(0, 0, Cylinder_length)));
 		//m->AllocateBuffers(); Add(m);
 
@@ -865,70 +865,70 @@ struct Scene
 		for (int cylinder_num = 1; cylinder_num < 6; cylinder_num++)
 		{
 			float Cylinder_length = cylinder_peak[0].Distance(cylinder_peak[cylinder_num]);
-			m = new Model((cylinder_peak[0] + cylinder_peak[cylinder_num]) / 2, grid_material[3]);  //// My Cylinder~
-			m->AddCylinder(Cylinder_length, 0.1f, 10, Model::Color(147, 74, 0));
+			m = new OculusModel((cylinder_peak[0] + cylinder_peak[cylinder_num]) / 2, grid_material[3]);  //// My Cylinder~
+			m->AddCylinder(Cylinder_length, 0.1f, 10, OculusModel::Color(147, 74, 0));
 			m->Rot = Quatf(get_Normal(cylinder_peak[0], cylinder_peak[0] + Vector3f(0, 0, 1.0f), cylinder_peak[cylinder_num]), (cylinder_peak[cylinder_num] - cylinder_peak[0]).Angle(Vector3f(0, 0, Cylinder_length)));
 			m->AllocateBuffers(); Add(m);
 		}
 		//// Draw a sphere
-		m = new Model(cylinder_peak[0], grid_material[3]);  //// My Sphere~
-		m->AddSphere(+0.3f, 15, Model::Color(70, 35, 0));
+		m = new OculusModel(cylinder_peak[0], grid_material[3]);  //// My Sphere~
+		m->AddSphere(+0.3f, 15, OculusModel::Color(70, 35, 0));
 		m->AllocateBuffers(); Add(m);
 
 //54	//// Create a button bottom
-		m = new Model(Vector3f(-1, 2, 2), grid_material[3]);  //// My Cylinder 1~
-		m->AddCylinder(0.2f, 0.5f, 20, Model::Color(0, 0, 128));
+		m = new OculusModel(Vector3f(-1, 2, 2), grid_material[3]);  //// My Cylinder 1~
+		m->AddCylinder(0.2f, 0.5f, 20, OculusModel::Color(0, 0, 128));
 		m->AllocateBuffers(); Add(m);
 //55	//// Create a button top
-		m = new Model(Vector3f(-1, 2, 1.8f), grid_material[3]);  //// My Cylinder 2~
-		m->AddCylinder(0.2f, 0.25f, 15, Model::Color(128, 0, 0));
+		m = new OculusModel(Vector3f(-1, 2, 1.8f), grid_material[3]);  //// My Cylinder 2~
+		m->AddCylinder(0.2f, 0.25f, 15, OculusModel::Color(128, 0, 0));
 		m->AllocateBuffers(); Add(m);
 // ADDING END
 
 
-        m = new Model(Vector3f(0,0,0),grid_material[1]);  // Walls
-        m->AddSolidColorBox( -10.1f,   0.0f,  -20.0f, -10.0f,  4.0f,  20.0f, Model::Color(128,128,128)); // Left Wall
-        m->AddSolidColorBox( -10.0f,  -0.1f,  -20.1f,  10.0f,  4.0f, -20.0f, Model::Color(128,128,128)); // Back Wall
-        m->AddSolidColorBox(  10.0f,  -0.1f,  -20.0f,  10.1f,  4.0f,  20.0f, Model::Color(128,128,128));  // Right Wall
+        m = new OculusModel(Vector3f(0,0,0),grid_material[1]);  // Walls
+        m->AddSolidColorBox( -10.1f,   0.0f,  -20.0f, -10.0f,  4.0f,  20.0f, OculusModel::Color(128,128,128)); // Left Wall
+        m->AddSolidColorBox( -10.0f,  -0.1f,  -20.1f,  10.0f,  4.0f, -20.0f, OculusModel::Color(128,128,128)); // Back Wall
+        m->AddSolidColorBox(  10.0f,  -0.1f,  -20.0f,  10.1f,  4.0f,  20.0f, OculusModel::Color(128,128,128));  // Right Wall
         m->AllocateBuffers(); Add(m);
 
-        m = new Model(Vector3f(0,0,0),grid_material[0]);  // Floors
-        m->AddSolidColorBox( -10.0f,  -0.1f,  -20.0f,  10.0f,  0.0f, 20.1f,  Model::Color(128,128,128)); // Main floor
-        m->AddSolidColorBox( -15.0f,  -6.1f,   18.0f,  15.0f, -6.0f, 30.0f,  Model::Color(128,128,128));// Bottom floor
+        m = new OculusModel(Vector3f(0,0,0),grid_material[0]);  // Floors
+        m->AddSolidColorBox( -10.0f,  -0.1f,  -20.0f,  10.0f,  0.0f, 20.1f,  OculusModel::Color(128,128,128)); // Main floor
+        m->AddSolidColorBox( -15.0f,  -6.1f,   18.0f,  15.0f, -6.0f, 30.0f,  OculusModel::Color(128,128,128));// Bottom floor
         m->AllocateBuffers(); Add(m);
 
         if (reducedVersion) return;
 
-        m = new Model(Vector3f(0,0,0),grid_material[2]);  // Ceiling
-        m->AddSolidColorBox( -10.0f,  4.0f,  -20.0f,  10.0f,  4.1f, 20.1f,  Model::Color(128,128,128)); 
+        m = new OculusModel(Vector3f(0,0,0),grid_material[2]);  // Ceiling
+        m->AddSolidColorBox( -10.0f,  4.0f,  -20.0f,  10.0f,  4.1f, 20.1f,  OculusModel::Color(128,128,128)); 
         m->AllocateBuffers(); Add(m);
 
-        m = new Model(Vector3f(0,0,0),grid_material[3]);  // Fixtures & furniture
-        m->AddSolidColorBox(   9.5f,   0.75f,  3.0f,  10.1f,  2.5f,   3.1f,  Model::Color(96,96,96) );   // Right side shelf// Verticals
-        m->AddSolidColorBox(   9.5f,   0.95f,  3.7f,  10.1f,  2.75f,  3.8f,  Model::Color(96,96,96) );   // Right side shelf
-        m->AddSolidColorBox(   9.55f,  1.20f,  2.5f,  10.1f,  1.30f,  3.75f,  Model::Color(96,96,96) ); // Right side shelf// Horizontals
-        m->AddSolidColorBox(   9.55f,  2.00f,  3.05f,  10.1f,  2.10f,  4.2f,  Model::Color(96,96,96) ); // Right side shelf
-        m->AddSolidColorBox(   5.0f,   1.1f,   20.0f,  10.0f,  1.2f,  20.1f, Model::Color(96,96,96) );   // Right railing   
-        m->AddSolidColorBox(  -10.0f,  1.1f, 20.0f,   -5.0f,   1.2f, 20.1f, Model::Color(96,96,96) );   // Left railing  
+        m = new OculusModel(Vector3f(0,0,0),grid_material[3]);  // Fixtures & furniture
+        m->AddSolidColorBox(   9.5f,   0.75f,  3.0f,  10.1f,  2.5f,   3.1f,  OculusModel::Color(96,96,96) );   // Right side shelf// Verticals
+        m->AddSolidColorBox(   9.5f,   0.95f,  3.7f,  10.1f,  2.75f,  3.8f,  OculusModel::Color(96,96,96) );   // Right side shelf
+        m->AddSolidColorBox(   9.55f,  1.20f,  2.5f,  10.1f,  1.30f,  3.75f,  OculusModel::Color(96,96,96) ); // Right side shelf// Horizontals
+        m->AddSolidColorBox(   9.55f,  2.00f,  3.05f,  10.1f,  2.10f,  4.2f,  OculusModel::Color(96,96,96) ); // Right side shelf
+        m->AddSolidColorBox(   5.0f,   1.1f,   20.0f,  10.0f,  1.2f,  20.1f, OculusModel::Color(96,96,96) );   // Right railing   
+        m->AddSolidColorBox(  -10.0f,  1.1f, 20.0f,   -5.0f,   1.2f, 20.1f, OculusModel::Color(96,96,96) );   // Left railing  
         for (float f=5.0f;f<=9.0f;f+=1.0f)
         {
-            m->AddSolidColorBox(   f,   0.0f,   20.0f,   f+0.1f,  1.1f,  20.1f, Model::Color(128,128,128) );// Left Bars
-            m->AddSolidColorBox(  -f,   1.1f,   20.0f,  -f-0.1f,  0.0f,  20.1f, Model::Color(128,128,128) );// Right Bars
+            m->AddSolidColorBox(   f,   0.0f,   20.0f,   f+0.1f,  1.1f,  20.1f, OculusModel::Color(128,128,128) );// Left Bars
+            m->AddSolidColorBox(  -f,   1.1f,   20.0f,  -f-0.1f,  0.0f,  20.1f, OculusModel::Color(128,128,128) );// Right Bars
         }
-        m->AddSolidColorBox( -1.8f, 0.8f, 1.0f,   0.0f,  0.7f,  0.0f,   Model::Color(128,128,0)); // Table
-        m->AddSolidColorBox( -1.8f, 0.0f, 0.0f,  -1.7f,  0.7f,  0.1f,   Model::Color(128,128,0)); // Table Leg 
-        m->AddSolidColorBox( -1.8f, 0.7f, 1.0f,  -1.7f,  0.0f,  0.9f,   Model::Color(128,128,0)); // Table Leg 
-        m->AddSolidColorBox(  0.0f, 0.0f, 1.0f,  -0.1f,  0.7f,  0.9f,   Model::Color(128,128,0)); // Table Leg 
-        m->AddSolidColorBox(  0.0f, 0.7f, 0.0f,  -0.1f,  0.0f,  0.1f,   Model::Color(128,128,0)); // Table Leg 
-        m->AddSolidColorBox( -1.4f, 0.5f, -1.1f, -0.8f,  0.55f, -0.5f,  Model::Color(44,44,128) ); // Chair Set
-        m->AddSolidColorBox( -1.4f, 0.0f, -1.1f, -1.34f, 1.0f,  -1.04f, Model::Color(44,44,128) ); // Chair Leg 1
-        m->AddSolidColorBox( -1.4f, 0.5f, -0.5f, -1.34f, 0.0f,  -0.56f, Model::Color(44,44,128) ); // Chair Leg 2
-        m->AddSolidColorBox( -0.8f, 0.0f, -0.5f, -0.86f, 0.5f,  -0.56f, Model::Color(44,44,128) ); // Chair Leg 2
-        m->AddSolidColorBox( -0.8f, 1.0f, -1.1f, -0.86f, 0.0f,  -1.04f, Model::Color(44,44,128) ); // Chair Leg 2
-        m->AddSolidColorBox( -1.4f, 0.97f,-1.05f,-0.8f,  0.92f, -1.10f, Model::Color(44,44,128) ); // Chair Back high bar
+        m->AddSolidColorBox( -1.8f, 0.8f, 1.0f,   0.0f,  0.7f,  0.0f,   OculusModel::Color(128,128,0)); // Table
+        m->AddSolidColorBox( -1.8f, 0.0f, 0.0f,  -1.7f,  0.7f,  0.1f,   OculusModel::Color(128,128,0)); // Table Leg 
+        m->AddSolidColorBox( -1.8f, 0.7f, 1.0f,  -1.7f,  0.0f,  0.9f,   OculusModel::Color(128,128,0)); // Table Leg 
+        m->AddSolidColorBox(  0.0f, 0.0f, 1.0f,  -0.1f,  0.7f,  0.9f,   OculusModel::Color(128,128,0)); // Table Leg 
+        m->AddSolidColorBox(  0.0f, 0.7f, 0.0f,  -0.1f,  0.0f,  0.1f,   OculusModel::Color(128,128,0)); // Table Leg 
+        m->AddSolidColorBox( -1.4f, 0.5f, -1.1f, -0.8f,  0.55f, -0.5f,  OculusModel::Color(44,44,128) ); // Chair Set
+        m->AddSolidColorBox( -1.4f, 0.0f, -1.1f, -1.34f, 1.0f,  -1.04f, OculusModel::Color(44,44,128) ); // Chair Leg 1
+        m->AddSolidColorBox( -1.4f, 0.5f, -0.5f, -1.34f, 0.0f,  -0.56f, OculusModel::Color(44,44,128) ); // Chair Leg 2
+        m->AddSolidColorBox( -0.8f, 0.0f, -0.5f, -0.86f, 0.5f,  -0.56f, OculusModel::Color(44,44,128) ); // Chair Leg 2
+        m->AddSolidColorBox( -0.8f, 1.0f, -1.1f, -0.86f, 0.0f,  -1.04f, OculusModel::Color(44,44,128) ); // Chair Leg 2
+        m->AddSolidColorBox( -1.4f, 0.97f,-1.05f,-0.8f,  0.92f, -1.10f, OculusModel::Color(44,44,128) ); // Chair Back high bar
 
         for (float f=3.0f;f<=6.6f;f+=0.4f)
-            m->AddSolidColorBox( -3,  0.0f, f,   -2.9f, 1.3f, f+0.1f, Model::Color(64,64,64) );// Posts
+            m->AddSolidColorBox( -3,  0.0f, f,   -2.9f, 1.3f, f+0.1f, OculusModel::Color(64,64,64) );// Posts
 
         m->AllocateBuffers(); Add(m);
     }

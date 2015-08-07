@@ -29,6 +29,22 @@ limitations under the License.
 // Include the Oculus SDK
 #include "OVR_CAPI_GL.h"
 
+// GL includes
+#include "other/shader.h"
+#include "other/model.h"
+
+// GLM Mathemtics
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+// Other Libs
+#include <SOIL.h>
+
+
+int height = 2800;
+int width = 2800;
+
 using namespace OVR;
 
 std::vector<Vector3f> DisplayGeoNode(PXCGesture *gesture) {
@@ -135,15 +151,37 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 
     bool isVisible = true;
 
+// ADDING START	
+	//glEnable(GL_DEPTH_TEST);
+	//// Setup and compile our shaders
+	Shader shader("../../../apps/MovingCube/shader/shader.vs", "../../../apps/MovingCube/shader/shader.frag");
+
+	//// Load models
+	Model ourModel("../../../apps/MovingCube/iPhone5S/iPhone.obj");
+
 	//// Given parameters:
 	Vector3f finger_pos[7] =
 	{ Vector3f(0, 0, 0), Vector3f(0, 0.5f, 0), Vector3f(0.1f, 0.5f, 0), Vector3f(0.2f, 0.5f, 0), Vector3f(0, 0.6f, 0), Vector3f(0.1f, 0.6f, 0), Vector3f(0.2f, 0.6f, 0) };
 	int finger_size[7] = { 3, 1, 1, 1, 1, 1, 1 };
 	int flag_hand_to_cube = 0;//// flag = 0 when hand is far from cube, = 1 when near
+// ADDING END
 
     // Main loop
     while (Platform.HandleMessages())
     {
+		// Keyboard inputs to adjust player orientation
+		static float Yaw(3.141592f);
+		if (Platform.Key[VK_LEFT])  Yaw += 0.02f;
+		if (Platform.Key[VK_RIGHT]) Yaw -= 0.02f;
+
+		// Keyboard inputs to adjust player position
+		static Vector3f Pos2(0.0f, 1.6f, -5.0f);
+		if (Platform.Key['W'] || Platform.Key[VK_UP])     Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(0, 0, -0.05f));
+		if (Platform.Key['S'] || Platform.Key[VK_DOWN])   Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(0, 0, +0.05f));
+		if (Platform.Key['D'])                          Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(+0.05f, 0, 0));
+		if (Platform.Key['A'])                          Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(-0.05f, 0, 0));
+		Pos2.y = ovrHmd_GetFloat(HMD, OVR_KEY_EYE_HEIGHT, Pos2.y);
+
 // ADDING START	
 		std::vector<Vector3f> pos_six_point;
 		if (camera_on)
@@ -162,22 +200,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 				pp.ReleaseFrame();
 			}
 		}
-// ADDING END
-
-        // Keyboard inputs to adjust player orientation
-        static float Yaw(3.141592f);  
-        if (Platform.Key[VK_LEFT])  Yaw += 0.02f;
-        if (Platform.Key[VK_RIGHT]) Yaw -= 0.02f;
-
-        // Keyboard inputs to adjust player position
-        static Vector3f Pos2(0.0f,1.6f,-5.0f);
-        if (Platform.Key['W']||Platform.Key[VK_UP])     Pos2+=Matrix4f::RotationY(Yaw).Transform(Vector3f(0,0,-0.05f));
-        if (Platform.Key['S']||Platform.Key[VK_DOWN])   Pos2+=Matrix4f::RotationY(Yaw).Transform(Vector3f(0,0,+0.05f));
-        if (Platform.Key['D'])                          Pos2+=Matrix4f::RotationY(Yaw).Transform(Vector3f(+0.05f,0,0));
-        if (Platform.Key['A'])                          Pos2+=Matrix4f::RotationY(Yaw).Transform(Vector3f(-0.05f,0,0));
-		Pos2.y = ovrHmd_GetFloat(HMD, OVR_KEY_EYE_HEIGHT, Pos2.y);
-
-// ADDING START		
+	
 		//// If the hand is close to the cube, the cube moves with the hand.
 		Vector3f pos_cube = roomScene.Models[1]->Pos;
 		Vector3f pos_hand = roomScene.Models[2]->Pos;
@@ -329,6 +352,24 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 
                 Matrix4f view = Matrix4f::LookAtRH(shiftedEyePos, shiftedEyePos + finalForward, finalUp);
                 Matrix4f proj = ovrMatrix4f_Projection(HMD->DefaultEyeFov[eye], 0.2f, 1000.0f, ovrProjection_RightHanded);
+
+// ADDING START
+				//// Clear the colorbuffer
+				//glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+				shader.Use();
+				glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projection"), 1, GL_TRUE, (FLOAT*)&proj);
+				glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_TRUE, (FLOAT*)&view);
+				//// Draw the loaded model
+				glm::mat4 model;
+				model = glm::translate(model, glm::vec3(0.1f, 0.0f, 0.0f)); // Translate it down a bit so it's at the center of the scene
+				model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));	// It's a bit too big for our scene, so scale it down
+				model = glm::rotate(model, 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+				glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+
+				ourModel.Draw(shader);
+// ADDING END
 
             	// Render world
             	roomScene.Render(view,proj);
