@@ -38,17 +38,21 @@ limitations under the License.
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-// Other Libs
+// Others
 #include <SOIL.h>
+#include <algorithm>
+//#include "svm.h"
+#include "extractFeatures.h"
+//#include "getLabels.h"
 
-
-int height = 2800;
-int width = 2800;
+//int height = 2800;
+//int width = 2800;
 
 using namespace OVR;
+using namespace std;
 
-std::vector<Vector3f> DisplayGeoNode(PXCGesture *gesture) {
-	std::vector<Vector3f> pos_six_point;
+vector<Vector3f> DisplayGeoNode(PXCGesture *gesture) {
+	vector<Vector3f> pos_six_point;
 	PXCGesture::GeoNode nodes[2][11] = { 0 };
 	gesture->QueryNodeData(0, PXCGesture::GeoNode::LABEL_BODY_HAND_PRIMARY, 10, nodes[0]);
 	gesture->QueryNodeData(0, PXCGesture::GeoNode::LABEL_BODY_HAND_SECONDARY, 10, nodes[1]);
@@ -76,6 +80,19 @@ static void DisplayPicture(PXCImage *depth, PXCGesture *gesture) {
 	dispose = true;
 
 	if (dispose) image->Release();
+}
+
+//// Get the element in an array if it appears more than 3 times.
+int GetMode(int* arr)
+{
+	int freq[6] = { 0 };
+	for (int i = 0; i < 5; i++)
+		freq[arr[i]] ++;
+
+	for (int i = 0; i < 6; i++)
+		if (freq[i] > 3)
+			return i;
+	return 0;
 }
 
 //-------------------------------------------------------------------------------------
@@ -155,15 +172,36 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	//glEnable(GL_DEPTH_TEST);
 	//// Setup and compile our shaders
 	Shader shader("../../../apps/MovingCube/shader/shader.vs", "../../../apps/MovingCube/shader/shader.frag");
+	Shader shader_button("../../../apps/MovingCube/shader/shader.vs", "../../../apps/MovingCube/shader/shader.frag");
 
 	//// Load models
-	Model ourModel("../../../apps/MovingCube/iPhone5S/iPhone.obj");
+	//Model ourModel("../../../apps/MovingCube/iPhone5S/iPhone.obj");
+	Model instrument("../../../apps/MovingCube/instrument/instrument.obj");
+	Model button("../../../apps/MovingCube/button2/button2.obj");
+
+	// control button movement
+	float button_left = 0;
+	float button_right = 0;
+	float button_down = 0;
+	//bool isDown = false;
+	float button_clockwise = 0;
+	float button_counterclockwise = 0;
 
 	//// Given parameters:
 	Vector3f finger_pos[7] =
 	{ Vector3f(0, 0, 0), Vector3f(0, 0.5f, 0), Vector3f(0.1f, 0.5f, 0), Vector3f(0.2f, 0.5f, 0), Vector3f(0, 0.6f, 0), Vector3f(0.1f, 0.6f, 0), Vector3f(0.2f, 0.6f, 0) };
 	int finger_size[7] = { 3, 1, 1, 1, 1, 1, 1 };
 	int flag_hand_to_cube = 0;//// flag = 0 when hand is far from cube, = 1 when near
+
+	//// Create an array that stores recent 100 frames, and an int to record how many frames together.
+	vector<Vector3f> pos_six_points[FRAME];
+	double angles[FRAME][4];
+	int labels[FRAME];
+	int frameNumTotal = -1;
+	int frameNum = -1;
+	ML GestureLearning;
+	int gestureRecord[5] = { 0 };
+	int gestureResult = 0;
 // ADDING END
 
     // Main loop
@@ -182,10 +220,10 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 		if (Platform.Key['A'])                          Pos2 += Matrix4f::RotationY(Yaw).Transform(Vector3f(-0.05f, 0, 0));
 		Pos2.y = ovrHmd_GetFloat(HMD, OVR_KEY_EYE_HEIGHT, Pos2.y);
 
-// ADDING START	
-		std::vector<Vector3f> pos_six_point;
+// ADDING START			
+		vector<Vector3f> pos_six_point;
 		if (camera_on)
-		{
+		{		
 			// Get the hand position
 			if (pp.AcquireFrame(true)) {
 				PXCGesture *gesture = pp.QueryGesture();
@@ -196,6 +234,8 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 
 				////DisplayGeoNode
 				pos_six_point = DisplayGeoNode(gesture);
+				frameNum = (++frameNumTotal) % FRAME;
+				pos_six_points[frameNum] = pos_six_point;
 
 				pp.ReleaseFrame();
 			}
@@ -244,12 +284,25 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 		if (Platform.Key['M']){ move_time = 0; press_flag = true; }
 
 		//// Manipulate the new hand
-		if (Platform.Key['F']){ for (int finger_num = 0; finger_num < 6; finger_num++)	roomScene.Models[finger_num + 48]->Pos += Vector3f(0.05f, 0, 0); }
-		if (Platform.Key['H']){ for (int finger_num = 0; finger_num < 6; finger_num++)	roomScene.Models[finger_num + 48]->Pos += Vector3f(-0.05f, 0, 0); }
-		if (Platform.Key['R']){ for (int finger_num = 0; finger_num < 6; finger_num++)	roomScene.Models[finger_num + 48]->Pos += Vector3f(0, 0, 0.05f); }
-		if (Platform.Key['Y']){ for (int finger_num = 0; finger_num < 6; finger_num++)	roomScene.Models[finger_num + 48]->Pos += Vector3f(0, 0, -0.05f); }
-		if (Platform.Key['T']){ for (int finger_num = 0; finger_num < 6; finger_num++)	roomScene.Models[finger_num + 48]->Pos += Vector3f(0, 0.05f, 0); }
-		if (Platform.Key['G']){ for (int finger_num = 0; finger_num < 6; finger_num++)	roomScene.Models[finger_num + 48]->Pos += Vector3f(0, -0.05f, 0); }
+		//if (Platform.Key['F']){ for (int finger_num = 0; finger_num < 6; finger_num++)	roomScene.Models[finger_num + 48]->Pos += Vector3f(0.05f, 0, 0); }
+		//if (Platform.Key['H']){ for (int finger_num = 0; finger_num < 6; finger_num++)	roomScene.Models[finger_num + 48]->Pos += Vector3f(-0.05f, 0, 0); }
+		//if (Platform.Key['R']){ for (int finger_num = 0; finger_num < 6; finger_num++)	roomScene.Models[finger_num + 48]->Pos += Vector3f(0, 0, 0.05f); }
+		//if (Platform.Key['Y']){ for (int finger_num = 0; finger_num < 6; finger_num++)	roomScene.Models[finger_num + 48]->Pos += Vector3f(0, 0, -0.05f); }
+		//if (Platform.Key['T']){ for (int finger_num = 0; finger_num < 6; finger_num++)	roomScene.Models[finger_num + 48]->Pos += Vector3f(0, 0.05f, 0); }
+		//if (Platform.Key['G']){ for (int finger_num = 0; finger_num < 6; finger_num++)	roomScene.Models[finger_num + 48]->Pos += Vector3f(0, -0.05f, 0); }
+
+		if (Platform.Key['R']) button_left += 0.001f;
+		if (Platform.Key['T']) button_right -= 0.001f;
+		if (Platform.Key['Y'] || gestureResult == 1) button_down = 0.1f;
+		if (Platform.Key['F'] || gestureResult == 2) button_down = 0.0f;
+		if (Platform.Key['G'] || gestureResult == 3) button_clockwise += 5.0f;
+		if (Platform.Key['H'] || gestureResult == 4) button_counterclockwise -= 5.0f;
+		if (gestureResult == 5)
+			if (button_left == 0)
+				button_left += 0.1f;
+			else
+				button_left = 0;
+
 
 		//// If the index finger is close to the button, it press the button.
 		Vector3f pos_button = roomScene.Models[55]->Pos;
@@ -299,21 +352,43 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 
 		if (camera_on)
 		{
-			std::vector<Vector3f> aver_pos_six_point = pos_six_point;
 			//// Change the position of the hand according to the camera
-			roomScene.Models[53]->Pos = aver_pos_six_point[0] + Vector3f(0, -0.1f, 0);
+			roomScene.Models[53]->Pos = pos_six_point[0] + Vector3f(0, -0.1f, 0);
 			for (int cylinder_num = 1; cylinder_num < 6; cylinder_num++)
-				if (aver_pos_six_point[cylinder_num].x != 0 || aver_pos_six_point[cylinder_num].y != 0 || aver_pos_six_point[cylinder_num].z != 0)
+				if (pos_six_point[cylinder_num].x != 0 || pos_six_point[cylinder_num].y != 0 || pos_six_point[cylinder_num].z != 0)
 				{
-					float Cylinder_length = aver_pos_six_point[0].Distance(aver_pos_six_point[cylinder_num]) + 0.01f;
-					roomScene.Models[47 + cylinder_num]->Pos = (aver_pos_six_point[0] + aver_pos_six_point[cylinder_num]) / 2;
-					roomScene.Models[47 + cylinder_num]->Rot = Quatf(roomScene.get_Normal(aver_pos_six_point[0], aver_pos_six_point[0] + Vector3f(0, 0, 1.0f), aver_pos_six_point[cylinder_num]), (aver_pos_six_point[cylinder_num] - aver_pos_six_point[0]).Angle(Vector3f(0, 0, Cylinder_length)));
+					float Cylinder_length = pos_six_point[0].Distance(pos_six_point[cylinder_num]) + 0.01f;
+					roomScene.Models[47 + cylinder_num]->Pos = (pos_six_point[0] + pos_six_point[cylinder_num]) / 2;
+					roomScene.Models[47 + cylinder_num]->Rot = Quatf(roomScene.get_Normal(pos_six_point[0], pos_six_point[0] + Vector3f(0, 0, 1.0f), pos_six_point[cylinder_num]), (pos_six_point[cylinder_num] - pos_six_point[0]).Angle(Vector3f(0, 0, Cylinder_length)));
+				}
+				else
+				{
+					roomScene.Models[47 + cylinder_num]->Pos = pos_six_point[0] + Vector3f(100.0f, 100.0f, 100.0f);
 				}
 
 			//// If the player moves, his hand also moves.
 			for (int i = 48; i <= 53; i++)
 			{
 				roomScene.Models[i]->Pos = roomScene.Models[i]->Pos + Pos2 + Vector3f(0, 0, 3);
+			}
+
+			//// Gesture Recognition
+			GestureLearning.GetAngels(pos_six_points[frameNum], angles[frameNum]);
+			labels[frameNum] = GestureLearning.GetLabels(angles[frameNum]);
+			if (frameNumTotal >= FRAME)
+			{
+				double hist[HIST] = { 0 };
+				for (int i = 0; i < FRAME; i++)
+					hist[labels[i]] += 1.0 / FRAME;
+				GestureLearning.ReadHist(hist);
+				//OutputDebugStringA(GestureLearning.Predict());
+				gestureRecord[frameNumTotal % 5] = GestureLearning.PredictNum();
+				gestureResult = GetMode(gestureRecord);
+				if (frameNumTotal % 5 == 0)
+				{
+					OutputDebugStringA(to_string(gestureResult).c_str());
+					OutputDebugStringA("\n");
+				}
 			}
 		}
 // ADDING END
@@ -363,12 +438,27 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 				glUniformMatrix4fv(glGetUniformLocation(shader.Program, "view"), 1, GL_TRUE, (FLOAT*)&view);
 				//// Draw the loaded model
 				glm::mat4 model;
-				model = glm::translate(model, glm::vec3(0.1f, 0.0f, 0.0f)); // Translate it down a bit so it's at the center of the scene
-				model = glm::scale(model, glm::vec3(0.005f, 0.005f, 0.005f));	// It's a bit too big for our scene, so scale it down
-				model = glm::rotate(model, 180.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+				model = glm::translate(model, glm::vec3(-0.9f, 0.8f, 0.3f));
+				model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+				model = glm::rotate(model, -90.0f, glm::vec3(0.0f, 1.0f, 0.0f)); 
 				glUniformMatrix4fv(glGetUniformLocation(shader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
 
-				ourModel.Draw(shader);
+				//ourModel.Draw(shader);
+				instrument.Draw(shader);
+
+				shader_button.Use();
+				glUniformMatrix4fv(glGetUniformLocation(shader_button.Program, "projection"), 1, GL_TRUE, (FLOAT*)&proj);
+				glUniformMatrix4fv(glGetUniformLocation(shader_button.Program, "view"), 1, GL_TRUE, (FLOAT*)&view);
+
+				glm::mat4 model_button;
+				model_button = glm::translate(model_button, glm::vec3(-2.0f + button_left + button_right, 2.2f, -0.7f + button_down));
+				model_button = glm::scale(model_button, glm::vec3(0.05f, 0.05f, 0.05f));
+				model_button = glm::rotate(model_button, button_clockwise + button_counterclockwise, glm::vec3(0.0f, 0.0f, 1.0f));
+				model_button = glm::rotate(model_button, -90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+				glUniformMatrix4fv(glGetUniformLocation(shader_button.Program, "model"), 1, GL_FALSE, glm::value_ptr(model_button));
+
+				button.Draw(shader_button);
 // ADDING END
 
             	// Render world

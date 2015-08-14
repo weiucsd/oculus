@@ -12,8 +12,8 @@ https://software.intel.com/en-us/articles/intel-perceptual-computing-sdk-install
 
 Now you can use cmake to build this demo.  
 Currently, you need to make some changes in VS2013(we may fix it later):  
-  ~~1. In "Configuration Properties - C/C++ - Code Generation", change "Runtime Library" to "MTd".~~
-  2. In "Configuration Properties - Linker - System", change "SubSystem" to "Windows".
+  1. ~~In "Configuration Properties - C/C++ - Code Generation", change "Runtime Library" to "MTd".~~
+  2. ~~In "Configuration Properties - Linker - System", change "SubSystem" to "Windows".~~
   3. Set MovingCube as the Startup Project.
 The demo should be able to run now.
 
@@ -39,5 +39,14 @@ UPDATE
 ### Aug. 5th, 2015
 [Optimize] Revamp the cmake file. Add all included files and libraries to github, so you do not need to download the SDK or set the system variable. But you still need to install the runtime.  
 [Modify] Change all the runtime library to Multi-threaded Debug DLL(MDd).
-### Aug. 6th, 2015
+### Aug. 7th, 2015
 [Add] Add iPhone to the demo.
+### Aug. 10th, 2015
+[Add] Add gesture recognition to the demo.
+[Optimize] Write gesture recognition as a class.
+### Aug. 12th, 2015
+[Add] Add an oscilloscope with a button to the demo.
+[Modify] Change the right hand's controlling to the button's.
+[Delete] Comment the iPhone model.
+### Aug. 14th, 2015
+[Optimize] Set the SubSystem properties to Windows in cmake.

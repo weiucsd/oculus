@@ -14,6 +14,7 @@ set (PROJECT_LIB_MDD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/mdd)
 
 set(PROJECT_SRCS 
 ${PROJECT_SOURCE_DIR}/main.cpp
+${PROJECT_INCLUDES_DIR}/svm.cpp
 )
 
 IF (WIN32)
@@ -49,3 +50,5 @@ add_executable(${PROJECT_NAME} ${PROJECT_SRCS})
 target_link_libraries (${PROJECT_NAME} ${OCULUS_SDK_LIBRARIES})
 target_link_libraries (${PROJECT_NAME} ${PCSDK_LIBRARIES})
 target_link_libraries (${PROJECT_NAME} ${IPHONE_LIBRARIES})
+
+set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
