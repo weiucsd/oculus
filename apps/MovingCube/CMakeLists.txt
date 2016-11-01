@@ -2,47 +2,53 @@ cmake_minimum_required(VERSION 2.8)
 project (MovingCube)
 
 set (PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-set (PROJECT_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+set (PROJECT_INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+
+set (PROJECT_INCLUDES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
+set (LIBOVR_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes/LibOVRInclude)
+set (LIBOVRKERNEL_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes/LibOVRKernelSrc)
+set (PCSDK_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes/PCSDKinclude)
+set (PCSDK_SAMPLE_COMMON_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes/PCSDKsamplecommoninclude)
+
+set (PROJECT_LIB_MDD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib/mdd)
 
 set(PROJECT_SRCS 
-${PROJECT_SOURCE_DIR}/MovingCubeExample.cpp
+${PROJECT_SOURCE_DIR}/main.cpp
+${PROJECT_INCLUDES_DIR}/svm.cpp
 )
 
 IF (WIN32)
 	SET(CMAKE_DEBUG_POSTFIX d)
 ENDIF()
 
-include_directories("${PROJECT_INCLUDE_DIR}")
-include_directories(../../modules/walala/inc/)
-include_directories(../../modules/Oculus/inc/) 
-#include_directories(../../modules/OvrModule/inc/) 
+#find_package( OculusSDK REQUIRED )
+#find_package( PCSDK REQUIRED )
+# Look for the library.
+FIND_LIBRARY(OCULUS_SDK_LIBRARY_DEBUG NAMES LibOVR HINTS ${PROJECT_LIB_MDD_DIR} )
+FIND_LIBRARY(OCULUS_SDK_LIBRARY_KERNEL_DEBUG NAMES LibOVRKernel HINTS ${PROJECT_LIB_MDD_DIR} )
+SET(OCULUS_SDK_LIBRARIES ${OCULUS_SDK_LIBRARY_DEBUG} ${OCULUS_SDK_LIBRARY_KERNEL_DEBUG})
+FIND_LIBRARY(PCSDK_LIBRARY_DEBUG NAMES libpxc_d HINTS ${PROJECT_LIB_MDD_DIR} )
+FIND_LIBRARY(PCSDK_SAMPLE_LIBRARY_DEBUG NAMES libpxcutils_d HINTS ${PROJECT_LIB_MDD_DIR} )
+SET(PCSDK_LIBRARIES ${PCSDK_LIBRARY_DEBUG} ${PCSDK_SAMPLE_LIBRARY_DEBUG})
+FIND_LIBRARY(ASSIMP_LIBRARY NAMES assimp HINTS ${PROJECT_LIB_MDD_DIR} )
+FIND_LIBRARY(SOIL_LIBRARY NAMES SOIL HINTS ${PROJECT_LIB_MDD_DIR} )
+SET(IPHONE_LIBRARIES ${ASSIMP_LIBRARY} ${SOIL_LIBRARY})
+MESSAGE(${OCULUS_SDK_LIBRARIES})
+MESSAGE(${PCSDK_LIBRARIES})
+MESSAGE(${IPHONE_LIBRARIES})
 
-find_package( OpenCV REQUIRED )
-find_package( OculusSDK REQUIRED )
-#find_package( OvrvisionSDK REQUIRED )
-find_package( GLEW REQUIRED )
-
-if(MSVC)
-	find_package( GLFW REQUIRED )
-elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-	find_package( PkgConfig REQUIRED)
-	pkg_search_module( GLFW REQUIRED glfw3 )
-endif()
-
-include_directories("${OpenCV_INCLUDE_DIRS}")
-include_directories(${OCULUS_SDK_INCLUDE_DIRS})
-#include_directories(${OVRVISION_SDK_INCLUDE_DIRS})
-include_directories(${GLEW_INCLUDE_PATH})
-include_directories(${GLFW_INCLUDE_DIRS})
+#include_directories(${OCULUS_SDK_INCLUDE_DIRS})
+include_directories(${PROJECT_INC_DIR})
+include_directories(${PROJECT_INCLUDES_DIR})
+include_directories(${LIBOVR_INCLUDE_DIR})
+include_directories(${LIBOVRKERNEL_SRC_DIR})
+include_directories(${PCSDK_INCLUDE_DIR})
+include_directories(${PCSDK_SAMPLE_COMMON_INCLUDE_DIR})
 
 add_executable(${PROJECT_NAME} ${PROJECT_SRCS})
 
-target_link_libraries (${PROJECT_NAME} ${OpenCV_LIBS})
 target_link_libraries (${PROJECT_NAME} ${OCULUS_SDK_LIBRARIES})
-#target_link_libraries (${PROJECT_NAME} ${OVRVISION_SDK_LIBRARIES})
-target_link_libraries (${PROJECT_NAME} walala)
-target_link_libraries (${PROJECT_NAME} ${GLEW_LIBRARY})
-target_link_libraries (${PROJECT_NAME} ${GLFW_STATIC_LIBRARIES})
-target_link_libraries (${PROJECT_NAME} Oculus)
-#target_link_libraries (${PROJECT_NAME} OvrModule)
-#target_link_libraries (${PROJECT_NAME} OvrModule${CMAKE_DEBUG_POSTFIX})
+target_link_libraries (${PROJECT_NAME} ${PCSDK_LIBRARIES})
+target_link_libraries (${PROJECT_NAME} ${IPHONE_LIBRARIES})
+
+set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")

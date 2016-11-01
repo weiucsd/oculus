@@ -17,7 +17,10 @@ SET(OCULUS_SDK_ROOT_DIR
 
 # Look for the header file.
 FIND_PATH(OCULUS_SDK_INCLUDE_DIRS NAMES OVR.h HINTS 
-	${OCULUS_SDK_ROOT_DIR}/LibOVR/Include )
+	${OCULUS_SDK_ROOT_DIR}/LibOVR/Include 
+)
+
+include_directories(${OCULUS_SDK_ROOT_DIR}/LibOVRKernel/Src )
 
 # Determine architecture
 IF(CMAKE_SIZEOF_VOID_P MATCHES "8")
@@ -81,26 +84,40 @@ IF(EXISTS "${_OCULUS_SDK_LICENSE_FILE}")
 ENDIF()
 
 # Look for the library.
-FIND_LIBRARY(OCULUS_SDK_LIBRARY NAMES libovr libovr64 ovr HINTS ${OCULUS_SDK_ROOT_DIR} 
-                                                      ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/${_OCULUS_SDK_LIB_ARCH}/${_OCULUS_MSVC_DIR}
+FIND_LIBRARY(OCULUS_SDK_LIBRARY NAMES libovr libovr64 ovr LibOVR LibOVRKernel HINTS ${OCULUS_SDK_ROOT_DIR} 
+                                                      ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Windows/${_OCULUS_SDK_LIB_ARCH}/Release/${_OCULUS_MSVC_DIR}
+						      ${OCULUS_SDK_ROOT_DIR}/LibOVRKernel/Lib/Windows/${_OCULUS_SDK_LIB_ARCH}/Debug/${_OCULUS_MSVC_DIR}
                                                       ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Mac/Release
                                                       ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Linux/Release/${_OCULUS_SDK_LIB_ARCH}
                                                     )
 
-# This will find release lib on Linux if no debug is available - on Linux this is no problem and avoids 
-# having to compile in debug when not needed
-FIND_LIBRARY(OCULUS_SDK_LIBRARY_DEBUG NAMES libovr${CMAKE_DEBUG_POSTFIX} libovr64${CMAKE_DEBUG_POSTFIX} ovr${CMAKE_DEBUG_POSTFIX} ovr libovr HINTS 
-                                                      ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/${_OCULUS_SDK_LIB_ARCH}/${_OCULUS_MSVC_DIR}
+FIND_LIBRARY(OCULUS_SDK_LIBRARY_DEBUG NAMES LibOVR LibOVR${CMAKE_DEBUG_POSTFIX} HINTS 
+                                                      ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Windows/${_OCULUS_SDK_LIB_ARCH}/Debug/${_OCULUS_MSVC_DIR}
                                                       ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Mac/Debug
                                                       ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Mac/Release
                                                       ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Linux/Debug/${_OCULUS_SDK_LIB_ARCH}
                                                       ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Linux/Release/${_OCULUS_SDK_LIB_ARCH}
-                                                    )
-    
-MARK_AS_ADVANCED(OCULUS_SDK_LIBRARY)
-MARK_AS_ADVANCED(OCULUS_SDK_LIBRARY_DEBUG)
+                                                    )  
 
-SET(OCULUS_SDK_LIBRARIES optimized ${OCULUS_SDK_LIBRARY} debug ${OCULUS_SDK_LIBRARY_DEBUG})
+MESSAGE(${OCULUS_SDK_LIBRARY_DEBUG})
+
+
+FIND_LIBRARY(OCULUS_SDK_LIBRARY_KERNEL_DEBUG NAMES LibOVRKernel${CMAKE_DEBUG_POSTFIX} LibOVRKernel HINTS 
+                                                      ${OCULUS_SDK_ROOT_DIR}/LibOVR/Lib/Windows/${_OCULUS_SDK_LIB_ARCH}/Debug/${_OCULUS_MSVC_DIR}
+						      ${OCULUS_SDK_ROOT_DIR}/LibOVRKernel/Lib/Windows/${_OCULUS_SDK_LIB_ARCH}/Debug/${_OCULUS_MSVC_DIR}
+						      ${OCULUS_SDK_ROOT_DIR}/LibOVRKernel/Lib/Windows/Win32/Debug/VS2013
+                                                    )     
+MESSAGE(${OCULUS_SDK_LIBRARY_KERNEL_DEBUG})
+
+# MARK_AS_ADVANCED(OCULUS_SDK_LIBRARY)
+
+# SET(OCULUS_SDK_LIBRARIES optimized ${OCULUS_SDK_LIBRARY})
+
+# MARK_AS_ADVANCED(OCULUS_SDK_LIBRARY_DEBUG)
+
+SET(OCULUS_SDK_LIBRARIES ${OCULUS_SDK_LIBRARY_DEBUG} ${OCULUS_SDK_LIBRARY_KERNEL_DEBUG})
+
+MESSAGE(${OCULUS_SDK_LIBRARIES})
 
 # handle the QUIETLY and REQUIRED arguments and set OCULUS_SDK_FOUND to TRUE if
 # all listed variables are TRUE
